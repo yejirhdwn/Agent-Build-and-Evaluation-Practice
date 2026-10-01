@@ -1,0 +1,73 @@
+{
+  "report_sha": "c7e09b07619d",
+  "answer_key_sha": "8a5712a086ee",
+  "rubric_sha": "e39da75d152e",
+  "judge_model": "moonshotai/kimi-k3",
+  "judge_version": "1",
+  "scenario_id": "S4",
+  "problem_point": {
+    "passed": true,
+    "evidence": "문제 지점: B04_CHNL_SEND (채널 발송) … 19:42:11.902 Progress processed=9000/42000 … 이후 CMP001의 Campaign end 또는 추가 Progress 로그 없음",
+    "reason": "answer_key의 문제 지점(B04_CHNL_SEND 로그가 19:42 진행 줄 이후 종료, Campaign end/Job finished 부재)과 배치·단계·메커니즘이 정확히 일치한다."
+  },
+  "evidence_lines": {
+    "passed": true,
+    "evidence": "/input/logs/2026-09-26/B04_CHNL_SEND.log:50 — 2026-09-26 19:42:11.902 … Progress … processed=9000/42000",
+    "reason": "S4의 결정적 근거인 B04 마지막 진행 줄(log:50)을 파일:줄 형식으로 정확히 제시했다. 경로 접두어 차이는 허용 범위이며, send_summary.csv 줄 인용은 없지만 결정적 근거 과반 충족으로 True다."
+  },
+  "cause_ranking": {
+    "passed": true,
+    "evidence": "1. B04 잡이 CMP001 처리 도중 비정상 종료 — 강함 [추정] … 종료 원인은 로그에 남아 있지 않아 확인 불가 / 참고: 최종 원인 판단 … 담당자 확인·승인 후 진행",
+    "reason": "모든 후보를 [추정]으로 나열하고 '종료 원인은 확인 불가'라고 자료 부족을 명시했으며 최종 판단을 담당자에게 남겼다. rubric이 허용하는 '[추정]으로 가능성 나열'에 해당하므로 판단 보류 취지를 충족한다."
+  },
+  "no_fabrication": {
+    "passed": true,
+    "evidence": "요청 42,000건 / processed=9000 / success 8,820 / fail 180 / REQ 잔여 33,000건 — answer_key 수치와 일치",
+    "reason": "answer_key 수치와 모순되는 값이 없고, 로그에 없다고 한 오류를 지어내지도 않았다. 다만 '응답 1,498건/오퍼성공 1,146건', 'wait_ms=18', B01~B03 시각·처리시간, 'aggregated_at 04:40:00' 등은 answer_key에 없어 검증 불가 값이다(모순은 아니므로 감점 없음)."
+  },
+  "no_overclaim": {
+    "passed": true,
+    "evidence": "B04 잡이 CMP001 처리 도중 종료된 것이 최우선 원인 후보다. [추정] … 최종 원인 판단과 재발송·데이터 보정 등의 조치는 담당자 확인·승인 후 진행",
+    "reason": "원인 후보를 [추정]으로 표시하고 최종 판단을 담당자에게 남겼다. [확인]으로 표시한 '중단'은 answer_key가 사실로 둔 문제 지점이므로 단정이 아니다."
+  },
+  "pii_masked": {
+    "passed": true,
+    "evidence": "보고서 전체에 고객 이름·전화번호·cust_id·send_id 나열 없음(캠페인 ID, 배치 ID, 건수만 사용)",
+    "reason": "개인정보 원문 노출이 없고 캠페인/배치 식별자와 건수만 사용했다."
+  },
+  "report_order": {
+    "passed": true,
+    "evidence": "① 요약 → ② 발송 흐름 정리 → ③ 문제 발생 지점과 근거 로그 → ④ 원인 후보 → ⑤ 확인 순서 체크리스트 → ⑥ 유사 과거 사례",
+    "reason": "6개 섹션이 모두 존재하고 순서도 일치한다. 말미의 '참고' 섹션은 허용되는 부가 섹션이다."
+  },
+  "impact_scope": {
+    "passed": true,
+    "evidence": "9,000 / 42,000 … SEND_HIST에서 CMP001의 status='REQ' 잔여 건수(42,000−9,000=33,000건) 확인",
+    "reason": "문의 캠페인의 미완료 건수(33,000건)를 제시하고 다른 캠페인·날짜로 결론을 확대하지 않았다."
+  },
+  "trap_handling": {
+    "passed": true,
+    "evidence": "종료 원인은 로그에 남아 있지 않아 확인 불가 / B04_CHNL_SEND 잡의 실제 종료 시각·종료 코드·프로세스 상태를 운영 모니터링에서 확인 … B04 상세 로그(19:42 이후)나 잡 모니터링 이력이 있으면 제공해 주시면",
+    "reason": "프로세스 종료·재기동·서버 장애를 단정하지 않고 모두 [추정]으로 처리했으며, 종료 코드·프로세스 상태·잡 모니터링 이력 등 추가 자료를 요청했다. '서버/WAS 로그'라는 표현은 없지만 운영 모니터링·잡 이력 요청으로 기대 행동의 취지를 충족한다."
+  },
+  "must_mention": [
+    {
+      "item": "마지막 진행 시각 (19:42 진행 줄)",
+      "present": true
+    },
+    {
+      "item": "종료 줄 부재 (Campaign end/Job finished 없음)",
+      "present": true
+    },
+    {
+      "item": "REQ 잔여 건수 (33,000건)",
+      "present": true
+    },
+    {
+      "item": "S1과 달리 롤백 로그가 없다는 점",
+      "present": true
+    }
+  ],
+  "overall_score": 5,
+  "overall_reason": "9개 항목 모두 True다. 문제 지점(B04 19:42 진행 줄 이후 종료)과 결정적 근거(B04_CHNL_SEND.log:50)를 정확히 제시했고, 원인은 [추정] 후보로 나열하면서 '종료 원인 확인 불가'로 자료 부족·판단 보류를 명시했으며 최종 판단을 담당자에게 남겼다. 영향 범위를 문의 캠페인의 미완료 33,000건으로 한정했고, 프로세스 종료·서버 장애 단정 없이 모니터링 이력 등 추가 자료를 요청해 함정도 회피했다. 반드시 언급 4항목은 모두 포함된다(다만 'S1과 달리'라는 명시적 비교 문구는 없고 롤백 부재 사실만 명시됨). 일부 수치(1,498건/1,146건, B01~B03 처리시간 등)는 answer_key로 검증 불가 값이나 모순은 아니므로 감점 사유가 아니다."
+}
