@@ -44,6 +44,17 @@ class ShellPolicyTest(unittest.TestCase):
             self.assertEqual(result.exit_code, 126)
             self.assertIn("거부됨", result.output)
 
+    def test_file_tools_cannot_leave_workspace(self):
+        with tempfile.TemporaryDirectory() as root:
+            ws = Path(root) / "ws"
+            ws.mkdir()
+            secret = Path(root) / "answer.md"
+            secret.write_text("SECRET", encoding="utf-8")
+            backend = RestrictedShellBackend(root_dir=str(ws), virtual_mode=True)
+            for path in ("/../answer.md", "../answer.md", str(secret)):
+                with self.assertRaises(ValueError, msg=path):
+                    backend.read(path)
+
 
 class RunEvalTest(unittest.TestCase):
     def test_final_answer_and_suspicious_calls(self):
