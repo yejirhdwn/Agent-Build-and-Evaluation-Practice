@@ -23,9 +23,11 @@ Telegram/Email)가 꺼진 상태로 돌아 실수로 실제 메시지를 보내�
 
 모든 조작은 이 스킬의 CLI 로 한다. 셸(`execute`)에서 호출한다.
 
-> 셸은 허용 목록으로 제한된다. 서버를 `META_HARNESS_ENABLED=1` 로 띄웠을 때만 아래 CLI 를
-> 실행할 수 있고, 꺼져 있으면 `[거부됨]` 이 돌아온다. 그때는 사용자에게 서버를 그렇게 다시
-> 띄워 달라고 안내한다. 셸 메타문자(`; & | < > $ \`, 백틱)와 리다이렉션·heredoc 은 쓸 수 없다.
+> 셸은 허용 목록으로 제한된다. 개선 에이전트(`harness-improver` 그래프)는 항상 아래 CLI 를 쓸 수
+> 있다. log-trace 에이전트(`deepagent` 그래프)는 서버를 `META_HARNESS_ENABLED=1` 로 띄웠을 때만
+> 허용되고, 꺼져 있으면 `[거부됨]` 이 돌아온다. 셸 메타문자(`; & | < > $ \`, 백틱)와
+> 리다이렉션·heredoc 은 쓸 수 없다. 입력 파일(`--query-file`·`--find-file`·`--replace-file`)은
+> 작업 디렉터리 안의 파일만 받고, `eval/`·`runs/` 경로는 거부된다.
 
 ```
 python skills/meta-harness/metaharness.py <subcommand> [옵션]
@@ -35,6 +37,33 @@ python skills/meta-harness/metaharness.py <subcommand> [옵션]
 > 루트를 위로 올라가며 찾는다. 홈 경로는 `doctor` 출력에서 확인할 수 있다.
 
 서브커맨드: `doctor · init · run · fork · edit · set-prompt · diff · compare · show · list · promote · clean`
+
+## 평가 세트(S1~S4) 모드 — log-trace 에이전트 개선
+
+질의 A 하나 대신 S1~S4 평가 세트로 실행하고 LLM Judge 로 채점한다. **성공기준은 Judge 의
+항목별 True/False(9개 항목)와 pairwise 결과**이고, trace 지표는 참고용이다. 오래 걸리므로
+`execute` 의 timeout 을 넉넉히(3600) 준다.
+
+```
+python skills/meta-harness/metaharness.py run --variant baseline --suite
+python skills/meta-harness/metaharness.py show --suite --variant baseline --what report --scenario S3
+python skills/meta-harness/metaharness.py show --suite --variant baseline --what metrics
+python skills/meta-harness/metaharness.py run --variant v1 --suite --repeat 2
+python skills/meta-harness/metaharness.py compare --suite --a baseline --b v1
+```
+
+- `run --suite` 는 variant 를 `eval/run_scenarios.py` 로 S1~S4 실행(시나리오마다 새 thread, 레포 밖
+  샌드박스)하고 `eval/judge.py` 로 채점한다. 출력은 **항목 통과 여부·종합 점수·trace 지표만** 보여준다.
+  정답(answer_key)과 Judge 의 판정 근거는 보여주지 않으며 찾지도 않는다.
+- 실패 항목의 원인은 `show --suite --what report|trace` 로 variant 자신의 보고서와 실행 기록을 읽어
+  진단한다. 예: "영향 범위 판단 False" → 보고서가 범위를 어떻게 정했는지, 그 근거를 조회했는지.
+- `compare --suite` 는 baseline 의 최근 실행과 variant 의 모든 반복 실행을 비교한다. 반복마다 항목
+  개선·회귀, pairwise(A/B 순서를 바꿔 두 번, 엇갈리면 무승부)를 보고 **모든 반복이 같은 승자일 때만**
+  승리로 판정한다(그 외 무승부). fork 하면 그 variant 의 이전 실행 기록은 초기화된다.
+- `edit` 는 노브(`langchain-deepagents.py` 의 `SYSTEM_PROMPT`, `trace_tools.py`,
+  `workspace_seed/skills/log-trace/`)만 고칠 수 있다. 새로 넣는 텍스트에 캠페인 ID·`파일:줄번호`·
+  구체 수치가 있으면 과적합으로 보고 거부한다. 일반 원칙으로 쓴다.
+- 평가 세트가 4개로 작다. 한 시나리오의 실패만 겨냥하지 말고 여러 시나리오에 통하는 원칙인지 본다.
 
 ## 절차
 
@@ -84,8 +113,8 @@ python skills/meta-harness/metaharness.py show --variant baseline --what answer
 | 약점 | 수정할 곳(variant 안) |
 |------|----------------------|
 | 행동원칙/톤/판단 문제 | `langchain-deepagents.py` 의 `SYSTEM_PROMPT` |
-| 특정 도구의 동작/스키마/에러 | `connectors.py`, 또는 `langchain-deepagents.py` 의 `_web_search_tools`/`_mcp_tools` |
-| 반복 절차의 품질 | `workspace_seed/skills/<name>/SKILL.md` (+ 스크립트) |
+| 특정 도구의 동작/스키마/에러 | `trace_tools.py` (조회 도구) |
+| 반복 절차의 품질 | `workspace_seed/skills/log-trace/SKILL.md` (+ references·templates) |
 
 ### 3) variant 만들고 **최소 변경**으로 수정
 

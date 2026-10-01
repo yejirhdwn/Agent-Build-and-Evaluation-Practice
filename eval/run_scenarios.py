@@ -57,6 +57,7 @@ HARNESS_ENTRY = "langchain-deepagents.py"
 SANDBOX_IGNORE = {
     ".git", ".venv", "venv", "eval", "runs", "workspace", "__pycache__", ".langgraph_api",
     "_archive", "docs", ".meta", "_ws", "_runs", ".env", ".pytest_cache", ".mypy_cache",
+    "workspace_improver",
 }
 
 

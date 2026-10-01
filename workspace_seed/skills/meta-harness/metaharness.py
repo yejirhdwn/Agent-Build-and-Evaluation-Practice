@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import argparse
 import difflib
+import re
 import hashlib
 import importlib.util
 import json
@@ -50,7 +51,7 @@ HARNESS_ENTRY = "langchain-deepagents.py"
 # eval/(정답·시나리오)과 runs/(평가 보고서)는 복제본 에이전트가 읽으면 정답 유출이므로 복사하지 않는다.
 COPY_IGNORE_DIRS = {
     ".git", ".venv", "venv", "workspace", "__pycache__", ".langgraph_api",
-    "eval", "runs",
+    "eval", "runs", "workspace_improver",
     ".meta", ".mypy_cache", ".ruff_cache", ".pytest_cache", "node_modules",
     ".idea", ".vscode",
 }
@@ -63,14 +64,30 @@ ENV_ALLOWLIST = {
     "ANTHROPIC_API_KEY",
     "LANGSMITH_API_KEY", "LANGCHAIN_API_KEY",
     "LANGCHAIN_TRACING_V2", "LANGSMITH_TRACING", "LANGCHAIN_PROJECT",
+    "LANGSMITH_PROJECT", "LANGSMITH_ENDPOINT",
+    "MODEL_NAME", "MODEL_BASE_URL", "MODEL_PRICE_INPUT_PER_M", "MODEL_PRICE_OUTPUT_PER_M",
 }
 
 # promote 로 본체에 되돌릴 수 있는 소스 경로(안전 화이트리스트).
 # .env / uv.lock / pyproject 등 설정·시크릿은 기본 제외(--include-config 로 포함).
 PROMOTABLE_PREFIXES = (
-    "langchain-deepagents.py", "connectors.py", "gateway.py",
+    "langchain-deepagents.py", "connectors.py", "gateway.py", "trace_tools.py",
     "langgraph.json", "workspace_seed/",
 )
+
+# edit 로 고칠 수 있는 노브(시스템 프롬프트 / 도구 코드 / log-trace 스킬). 셸 정책·관측·평가 코드는
+# 실험 대상이 아니므로 --force 없이는 고치지 않는다.
+EDITABLE_KNOBS = ("langchain-deepagents.py", "trace_tools.py", "workspace_seed/skills/log-trace/")
+
+# 평가 세트 과적합 방지: edit 로 새로 넣는 텍스트에 특정 캠페인 ID·근거 줄번호·구체 수치를 넣지 않는다.
+OVERFIT_PATTERNS = (
+    (re.compile(r"\d{8}CMP\d{3}"), "캠페인 ID"),
+    (re.compile(r"\.(?:log|csv|java|json|properties):\d+"), "파일:줄번호"),
+    (re.compile(r"(?<![0-9A-Za-z_.])(?:\d{1,3}(?:,\d{3})+|\d{4,})(?![0-9A-Za-z_])"), "구체 수치"),
+)
+
+# S1~S4 평가 세트 실행 기록(variant → 결과 폴더 목록)
+SUITE_STATE = "suite.json"
 
 MAX_ARTIFACT_BYTES = 2_000_000  # 산출물로 복사할 파일 최대 크기
 
@@ -81,6 +98,22 @@ SURGICAL_MIN_LINES = 4
 
 # variant 가 어느 baseline 에서 갈라졌는지 기록하는 파일(.meta 는 복사·diff 대상에서 제외).
 BASE_META = Path(".meta") / "base.json"
+
+
+def safe_input_file(path: str) -> Path:
+    """에이전트가 넘긴 입력 파일 경로를 검사한다(정답·평가 결과 파일 읽기 차단).
+
+    현재 작업 디렉터리(에이전트 workspace) 안의 파일만 허용하고, eval/·runs/ 는 거부한다.
+    """
+    target = Path(path).resolve()
+    cwd = Path.cwd().resolve()
+    if not target.is_relative_to(cwd):
+        die(f"입력 파일은 작업 디렉터리({cwd}) 안에 있어야 합니다: {path}")
+    if {"eval", "runs", "answer_keys"} & set(target.relative_to(cwd).parts):
+        die(f"평가 경로(eval/·runs/)의 파일은 입력으로 쓸 수 없습니다: {path}")
+    if not target.is_file():
+        die(f"파일이 없습니다: {path}")
+    return target
 
 
 def die(msg: str, code: int = 1) -> "None":
@@ -184,6 +217,7 @@ def make_variant(repo: Path, home: Path, name: str, src: Path | None, live: bool
         if jp.exists():
             shutil.rmtree(jp, ignore_errors=True)
     sanitize_env_file(dst / ".env", live=live)
+    _reset_suite(home, name)
     # promote 의 3-way 병합 기준 검증용: fork 는 원본의 기록을 물려받고,
     # init(원본=레포)은 새 baseline 자신의 지문을 기록한다.
     base_fp = _read_base_fp(src) if src is not None else _fingerprint(dst)
@@ -482,8 +516,8 @@ def cmd_fork(args: argparse.Namespace) -> int:
         "path": str(dst),
         "editable_knobs": {
             "system_prompt": f"{HARNESS_ENTRY} 의 SYSTEM_PROMPT",
-            "tools": f"connectors.py, {HARNESS_ENTRY} 의 _web_search_tools/_mcp_tools",
-            "skills": "workspace_seed/skills/<name>/SKILL.md",
+            "tools": "trace_tools.py (조회 도구)",
+            "skills": "workspace_seed/skills/log-trace/",
         },
         "hint": (
             "variant 는 원본과 동일한 복사본입니다. 개선은 '바꿀 부분만' 최소로 하세요: "
@@ -503,7 +537,7 @@ def cmd_set_prompt(args: argparse.Namespace) -> int:
     entry = vp / HARNESS_ENTRY
     if not entry.exists():
         die(f"variant '{args.variant}' 에 {HARNESS_ENTRY} 가 없습니다.")
-    new_prompt = Path(args.file).read_text(encoding="utf-8") if args.file else sys.stdin.read()
+    new_prompt = safe_input_file(args.file).read_text(encoding="utf-8") if args.file else sys.stdin.read()
     text = entry.read_text(encoding="utf-8")
     marker = "SYSTEM_PROMPT = \"\"\""
     start = text.find(marker)
@@ -575,9 +609,12 @@ def cmd_edit(args: argparse.Namespace) -> int:
     if not vp.exists():
         die(f"variant '{args.variant}' 가 없습니다.")
     target = _resolve_variant_file(vp, args.file)
+    rel = target.relative_to(vp.resolve()).as_posix()
+    if not rel.startswith(EDITABLE_KNOBS) and not args.force:
+        die(f"{rel} 는 노브(시스템 프롬프트·도구 코드·log-trace 스킬)가 아닙니다: {EDITABLE_KNOBS}")
 
     if args.find_file:
-        find = Path(args.find_file).read_text(encoding="utf-8")
+        find = safe_input_file(args.find_file).read_text(encoding="utf-8")
     elif args.find is not None:
         find = args.find
     else:
@@ -585,7 +622,7 @@ def cmd_edit(args: argparse.Namespace) -> int:
     if args.delete and (args.replace_file or args.replace is not None):
         die("--delete 와 --replace/--replace-file 은 함께 쓸 수 없습니다.")
     if args.replace_file:
-        replace = Path(args.replace_file).read_text(encoding="utf-8")
+        replace = safe_input_file(args.replace_file).read_text(encoding="utf-8")
     elif args.replace is not None:
         replace = args.replace
     elif args.delete:
@@ -595,6 +632,12 @@ def cmd_edit(args: argparse.Namespace) -> int:
 
     if not find:
         die("find 문자열이 비어 있습니다.")
+    if not args.allow_specific:
+        for pattern, kind in OVERFIT_PATTERNS:
+            added = sorted({m.group(0) for m in pattern.finditer(replace)} - {m.group(0) for m in pattern.finditer(find)})
+            if added:
+                die(f"새로 넣는 텍스트에 {kind}({', '.join(added[:5])})가 있습니다. 평가 세트 과적합을 막기 위해 "
+                    "특정 값 대신 일반 원칙으로 쓰세요(사용자가 명시적으로 허용하면 --allow-specific).")
     text = target.read_text(encoding="utf-8")
     n = text.count(find)
     if n == 0:
@@ -675,6 +718,9 @@ def cmd_run(args: argparse.Namespace) -> int:
                   "      본체 최신 상태와 비교하려면 `init` 으로 baseline 을 새로 만들고 다시 fork 하세요.",
                   file=sys.stderr)
 
+    if args.suite:
+        return _run_suite(repo, home, vp, args)
+
     out = runs_dir(home) / args.variant
     if out.exists():
         shutil.rmtree(out)
@@ -715,6 +761,131 @@ def cmd_run(args: argparse.Namespace) -> int:
     print("\n[run] 실패: summary.json 이 생성되지 않았습니다. run.log 를 확인하세요:")
     print(log[-2000:])
     return rc or 1
+
+
+
+# ---------------------------------------------------------------------------
+# S1~S4 평가 세트 모드 (eval/run_scenarios.py 실행 + eval/judge.py 채점)
+# ---------------------------------------------------------------------------
+# 개선 주체에게는 정답(answer_key)을 담을 수 있는 Judge 근거·이유를 넘기지 않는다. 항목별 통과
+# 여부, 점수, pairwise 승패, trace 지표만 출력한다. 전체 비교 보고서는 레포 runs/ 에 저장되어
+# 사용자만 본다(개선 에이전트의 파일 도구와 show 로는 닿지 않는다).
+
+_SUITE_METRICS = ("total_steps", "tool_calls", "duplicate_calls", "failed_retries", "total_tokens",
+                  "latency_s", "cost_usd", "skill_read_first")
+
+
+def _suite_state(home: Path) -> dict:
+    p = home / SUITE_STATE
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+
+
+def _save_suite_state(home: Path, state: dict) -> None:
+    home.mkdir(parents=True, exist_ok=True)
+    (home / SUITE_STATE).write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def _reset_suite(home: Path, variant: str) -> None:
+    state = _suite_state(home)
+    if state.pop(variant, None) is not None:
+        _save_suite_state(home, state)
+
+
+def _kst_stamp() -> str:
+    from datetime import datetime, timedelta, timezone
+    return datetime.now(timezone(timedelta(hours=9))).strftime("%Y%m%d-%H%M%S")
+
+
+def _py(repo: Path, script: str, *argv: str, timeout: int) -> subprocess.CompletedProcess:
+    env = {**os.environ, "PYTHONIOENCODING": "utf-8"}
+    env.pop("WORKSPACE_DIR", None)
+    return subprocess.run([sys.executable, str(repo / script), *argv], cwd=str(repo), env=env,
+                          capture_output=True, text=True, encoding="utf-8", errors="replace",
+                          timeout=timeout)
+
+
+def _run_suite(repo: Path, home: Path, vp: Path, args: argparse.Namespace) -> int:
+    state = _suite_state(home)
+    for i in range(max(1, args.repeat)):
+        run_set = _kst_stamp()
+        print(f"[suite] variant={args.variant} 반복 {i + 1}/{args.repeat} run_set={run_set} 시나리오={args.scenarios}")
+        before = _source_files(vp)
+        proc = _py(repo, "eval/run_scenarios.py", "run", "--variant", args.variant, "--harness-dir", str(vp),
+                   "--run-set", run_set, "--deadline", str(args.timeout), "--scenarios", *args.scenarios,
+                   timeout=args.timeout + 900)
+        reverted = _restore_sources(vp, before)
+        if reverted:
+            print(f"[suite] 실행 중 바뀐 variant 소스를 되돌렸습니다: {reverted}")
+        run_dir = repo / "runs" / run_set / args.variant
+        if proc.returncode != 0 or not any(run_dir.glob("S*.md")):
+            print((proc.stdout or "")[-2000:] + (proc.stderr or "")[-2000:])
+            die("평가 세트 실행에 실패했습니다.")
+        judged = _py(repo, "eval/judge.py", "score", str(run_dir), timeout=1800)
+        if judged.returncode != 0:
+            print((judged.stderr or "")[-2000:])
+            die("Judge 채점에 실패했습니다.")
+        summary = _py(repo, "eval/judge.py", "summary", str(run_dir), "--redact", timeout=600)
+        state.setdefault(args.variant, []).append(str(run_dir))
+        _save_suite_state(home, state)
+        print(f"[suite] 결과 폴더(사용자 확인용): {run_dir}")
+        print("[suite] 채점 요약(항목 통과 여부·점수·trace 지표, 정답 비노출):")
+        print(summary.stdout)
+    return 0
+
+
+def _compare_suite(repo: Path, home: Path, args: argparse.Namespace) -> int:
+    state = _suite_state(home)
+    if not state.get(args.a) or not state.get(args.b):
+        die(f"평가 세트 실행 기록이 없습니다: {args.a}={len(state.get(args.a, []))}회, "
+            f"{args.b}={len(state.get(args.b, []))}회. 먼저 run --suite 하세요.")
+    a_dir = state[args.a][-1]
+    b_dirs = state[args.b]
+    argv = ["compare", "--a", a_dir, "--json", "--quiet"]
+    for d in b_dirs:
+        argv += ["--b", d]
+    proc = _py(repo, "eval/judge.py", *argv, timeout=3600)
+    if proc.returncode != 0:
+        print((proc.stderr or "")[-2000:])
+        die("비교 채점에 실패했습니다.")
+    result = json.loads(proc.stdout[proc.stdout.index("{"):])
+    label = {"B": f"{args.b} 확실한 우세", "A": f"{args.a} 확실한 우세", "tie": "무승부(baseline 유지)"}
+    print(f"=== 평가 세트 비교: A={args.a}(최근 1회) vs B={args.b}({len(b_dirs)}회 반복) ===")
+    print(f"자동 판정: {label[result['final']]}  (반복이 모두 같은 승자일 때만 승리, 그 외 무승부)")
+    for i, rep in enumerate(result["reps"], 1):
+        imp = ", ".join(f"{s}:{k}" for s, k in rep["improved"]) or "없음"
+        reg = ", ".join(f"{s}:{k}" for s, k in rep["regressed"]) or "없음"
+        print(f"- 반복 {i}: 판정 {rep['verdict']} | 항목 개선 {imp} | 항목 회귀 {reg} | "
+              f"pairwise B 승 {rep['pairwise_b_wins'] or '없음'} · A 승 {rep['pairwise_a_wins'] or '없음'}")
+    print("\ntrace 지표 (A → B 반복별):")
+    for sid in sorted({p.name.split(".")[0] for p in Path(a_dir).glob("S*.meta.json")}):
+        ma = _meta_metrics(Path(a_dir), sid)
+        row = [f"{k}={ma.get(k)}→" + "/".join(str(_meta_metrics(Path(d), sid).get(k)) for d in b_dirs)
+               for k in _SUITE_METRICS]
+        print(f"  {sid}: " + ", ".join(row))
+    print(f"\n상세 비교 보고서(사용자 확인용, 판정 근거 포함): {b_dirs[-1]}")
+    print("※ 판정 기본값은 무승부다. 접전이면 run --suite --variant <B> 로 반복을 추가한 뒤 다시 compare 한다.")
+    return 0
+
+
+def _meta_metrics(run_dir: Path, sid: str) -> dict:
+    p = run_dir / f"{sid}.meta.json"
+    return (json.loads(p.read_text(encoding="utf-8")).get("metrics") or {}) if p.exists() else {}
+
+
+def _show_suite(home: Path, args: argparse.Namespace) -> int:
+    runs = _suite_state(home).get(args.variant) or []
+    if not runs:
+        die(f"'{args.variant}' 의 평가 세트 실행 기록이 없습니다.")
+    run_dir = Path(runs[args.rep - 1 if args.rep else -1])
+    files = {"report": f"{args.scenario}.md", "trace": f"{args.scenario}.trace.json", "metrics": "metrics.md"}
+    if args.what not in files or (args.what != "metrics" and not args.scenario):
+        die("--suite 에서는 --what report|trace|metrics 와 --scenario S1..S4 를 지정하세요.")
+    if args.scenario and not re.fullmatch(r"S\d+", args.scenario):
+        die("--scenario 는 S1..S4 형식이어야 합니다.")
+    text = (run_dir / files[args.what]).read_text(encoding="utf-8")
+    limit = 30000
+    sys.stdout.write(text if len(text) <= limit else text[:limit] + "\n…(생략)\n")
+    return 0
 
 
 def _load_summary(home: Path, variant: str) -> dict | None:
@@ -815,6 +986,8 @@ def cmd_diff(args: argparse.Namespace) -> int:
 def cmd_compare(args: argparse.Namespace) -> int:
     repo = find_repo_root()
     home = home_dir(repo, args.home)
+    if args.suite:
+        return _compare_suite(repo, home, args)
     sa, sb = _load_summary(home, args.a), _load_summary(home, args.b)
     if not sa:
         die(f"'{args.a}' 실행 결과(summary.json)가 없습니다. 먼저 run 하세요.")
@@ -850,12 +1023,16 @@ def cmd_compare(args: argparse.Namespace) -> int:
 def cmd_show(args: argparse.Namespace) -> int:
     repo = find_repo_root()
     home = home_dir(repo, args.home)
+    if args.suite:
+        return _show_suite(home, args)
     base = runs_dir(home) / args.variant
     fname = {
         "transcript": "transcript.md", "answer": "final_answer.md",
         "summary": "summary.json", "log": "run.log", "error": "error.txt",
     }.get(args.what, args.what)
-    p = base / fname
+    p = (base / fname).resolve()
+    if not p.is_relative_to(base.resolve()):
+        die("variant 실행 폴더 밖의 파일은 볼 수 없습니다.")
     if not p.exists():
         die(f"파일 없음: {p}")
     sys.stdout.write(p.read_text(encoding="utf-8"))
@@ -1007,7 +1184,9 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--replace-file", help="바꿀 텍스트 파일(멀티라인).")
     sp.add_argument("--delete", action="store_true", help="find 부분을 삭제(--replace 대신 명시).")
     sp.add_argument("--count", type=int, default=1, help="기대 매칭 횟수(기본 1, 유일 매칭 강제).")
-    sp.add_argument("--force", action="store_true", help="원본의 큰 부분을 바꾸는 전면 재작성도 허용.")
+    sp.add_argument("--force", action="store_true", help="원본의 큰 부분을 바꾸는 전면 재작성·노브 밖 파일 수정도 허용.")
+    sp.add_argument("--allow-specific", action="store_true",
+                    help="캠페인 ID·줄번호·구체 수치 삽입 허용(사용자가 명시적으로 허용할 때만).")
     sp.set_defaults(func=cmd_edit)
 
     sp = sub.add_parser("set-prompt",
@@ -1023,11 +1202,16 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--query-file", help="질의 파일 경로.")
     sp.add_argument("--timeout", type=int, default=900, help="실행 타임아웃 초(기본 900).")
     sp.add_argument("--recursion-limit", type=int, default=60, help="LangGraph recursion_limit.")
+    sp.add_argument("--suite", action="store_true",
+                    help="질의 대신 S1~S4 평가 세트를 실행하고 Judge 로 채점(정답은 보여주지 않음).")
+    sp.add_argument("--scenarios", nargs="*", default=["all"], help="--suite 에서 실행할 시나리오(기본 all).")
+    sp.add_argument("--repeat", type=int, default=1, help="--suite 반복 횟수(접전 확인용).")
     sp.set_defaults(func=cmd_run)
 
     sp = sub.add_parser("compare", help="두 variant 의 실행 요약을 나란히 비교.")
     sp.add_argument("--a", required=True)
     sp.add_argument("--b", required=True)
+    sp.add_argument("--suite", action="store_true", help="평가 세트 결과를 Judge 항목·pairwise 로 비교.")
     sp.set_defaults(func=cmd_compare)
 
     sp = sub.add_parser("diff", help="두 대상(variant 이름 또는 REPO)의 소스 unified diff.")
@@ -1038,7 +1222,10 @@ def build_parser() -> argparse.ArgumentParser:
     sp = sub.add_parser("show", help="실행 산출물 출력(transcript/answer/summary/log).")
     sp.add_argument("--variant", required=True)
     sp.add_argument("--what", default="transcript",
-                    help="transcript|answer|summary|log|error 또는 파일명.")
+                    help="transcript|answer|summary|log|error 또는 파일명. --suite 면 report|trace|metrics.")
+    sp.add_argument("--suite", action="store_true", help="평가 세트 실행 결과(보고서·trace·지표)를 본다.")
+    sp.add_argument("--scenario", help="--suite 의 시나리오 ID(S1..S4).")
+    sp.add_argument("--rep", type=int, help="--suite 의 반복 번호(기본: 최근).")
     sp.set_defaults(func=cmd_show)
 
     sp = sub.add_parser("list", help="variant/run 목록과 요약.")

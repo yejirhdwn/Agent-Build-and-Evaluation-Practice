@@ -1,7 +1,8 @@
 {
   "dependencies": ["."],
   "graphs": {
-    "deepagent": "./langchain-deepagents.py:agent"
+    "deepagent": "./langchain-deepagents.py:agent",
+    "harness-improver": "./harness_improver.py:agent"
   },
   "env": ".env"
 }

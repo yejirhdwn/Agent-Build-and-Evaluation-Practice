@@ -82,10 +82,16 @@ class RestrictedShellBackend(LocalShellBackend):
     """``execute`` 를 허용 목록으로 제한한 LocalShellBackend.
 
     ``aexecute`` 는 내부에서 ``execute`` 를 호출하므로 함께 제한된다.
+    ``allow_meta_harness`` 를 주면 환경변수 대신 그 값으로 meta-harness CLI 허용 여부를 정한다
+    (개선 에이전트 그래프는 True, 로그 추적 에이전트는 환경변수 기본값).
     """
 
+    def __init__(self, *args, allow_meta_harness: bool | None = None, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self._allow_meta_harness = allow_meta_harness
+
     def execute(self, command: str, *, timeout: int | None = None) -> ExecuteResponse:
-        reason = check_command(command)
+        reason = check_command(command, allow_meta_harness=self._allow_meta_harness)
         if reason:
             return ExecuteResponse(output=f"[거부됨] {reason}", exit_code=126)
         if timeout is None:
