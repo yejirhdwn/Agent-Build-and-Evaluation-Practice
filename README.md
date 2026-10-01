@@ -1,5 +1,20 @@
 # 로그 기반 원인 추적 에이전트
 
+## 0. 배경
+
+LLM 기반 Agent 구축 및 평가 실습(09/30\~10/01)에서 만든 "나만의 에이전트"입니다.
+
+- **업무 환경**: 실제 업무는 VDI 안에서 이루어지고, 소스·로그는 보안 관리 대상이라 외부로 가지고 나올 수 없습니다. 그래서 외부(Codespace)에서 에이전트 설계(system prompt, AGENTS.md, skill, 도구 인터페이스)를 목업 데이터로 만들어 검증하고, 설계와 코드 구조만 VDI로 가져가 실제 DB·로그·소스 조회로 도구를 교체하는 방식으로 진행합니다.
+- **풀려는 문제**: 채널 발송 연계 점검과 장애 대응은 모두 로그에서 출발해 흩어진 배치·모듈·소스를 따라가며 문제 지점을 찾는 일입니다. 어디서 막혔는지 연결고리를 추적하기 어렵고, 대응 품질이 담당자 역량에 따라 크게 달라집니다.
+- **1일차 설계**: 기획자 문의와 배치 로그를 받아 발송 흐름의 어느 단계에서 문제가 생겼는지 추적하는 에이전트를 설계했습니다. 결과물은 원인 후보와 확인 순서를 담은 6단 보고서 초안입니다. 첫 적용 범위는 채널 발송 연계로 좁혔습니다.
+  - 숙련자의 추적 순서는 `log-trace` 스킬로 정리했습니다.
+  - MCP 대신 목업 파일을 읽는 읽기 전용 조회 도구 10개를 만들었습니다. 도구 이름과 인자는 실제 연결을 가정해 설계했습니다.
+  - 지킬 규칙: 원본에 없는 값을 쓰지 않고, 원인은 후보로만 제시하고, 조치는 제안까지만 하고, 개인정보는 마스킹합니다.
+  - 평가는 S1\~S4 시나리오 4개(발송 안 됨, 결과 화면 값 누락, 대상 수 감소, 일부 발송)의 9개 항목 판정표를 사람이 손으로 채웠습니다.
+- **2일차 고도화**: 1일차 에이전트는 왜 그런 보고서가 나왔는지, 평가가 맞는지, 고친 뒤 정말 나아졌는지를 알 수 없었습니다. 그래서 Observation(LangSmith), LLM-as-a-Judge, Meta-Harness를 붙였습니다. 결과는 [고도화 보고서](docs/improvement_report.md)에 정리했습니다.
+
+자세한 기획은 [docs/agent_plan.md](docs/agent_plan.md)에 있습니다.
+
 ## 목적
 
 캠페인 채널 발송·성과 집계 문의를 받아, 로그에서 시작해 배치·테이블·소스와 변경·장애 이력까지 거슬러 확인하는 에이전트 PoC입니다. 실제 업무 소스·로그·개인정보는 넣지 않았고, 전부 가상인 목업 데이터로 설계와 평가 흐름을 검증합니다.
@@ -9,7 +24,7 @@
 이 저장소는 에이전트를 세 단계로 고도화합니다.
 
 1. **Observation**: LangSmith trace에 단계별 입출력·토큰·latency·비용·도구 호출을 남기고, 작업 방식 지표를 뽑습니다.
-2. **평가 세트와 LLM Judge**: S1~S4 질문과 정답 기준으로 항목별 True/False, 종합 점수, pairwise 비교를 자동화합니다.
+2. **평가 세트와 LLM Judge**: S1\~S4 질문과 정답 기준으로 항목별 True/False, 종합 점수, pairwise 비교를 자동화합니다.
 3. **Meta-Harness**: 개선 에이전트가 log-trace 에이전트를 격리 복제본으로 실행·수정·비교하고, 확실히 나은 변경만 승인을 받아 반영합니다.
 
 ## 에이전트 흐름
@@ -101,24 +116,24 @@ LANGSMITH_ENDPOINT=https://api.smith.langchain.com
 
 ## 평가 세트와 LLM Judge
 
-평가 세트는 기존 S1~S4([eval/scenarios.json](eval/scenarios.json), `eval/answer_keys/`)를 그대로 씁니다. 해석이 모호한 판정 기준은 answer_key를 고치지 않고 [eval/rubric.md](eval/rubric.md)에 보완했습니다.
+평가 세트는 기존 S1\~S4([eval/scenarios.json](eval/scenarios.json), `eval/answer_keys/`)를 그대로 씁니다. 해석이 모호한 판정 기준은 answer_key를 고치지 않고 [eval/rubric.md](eval/rubric.md)에 보완했습니다.
 
 [eval/judge.py](eval/judge.py)는 LLM-as-a-Judge 세 가지 형태를 구현합니다.
 
 - **항목별 True/False**: 판정표 9개 항목마다 보고서 인용 근거와 이유를 남깁니다.
-- **종합 점수**: 1~5점과 이유
+- **종합 점수**: 1\~5점과 이유
 - **Pairwise**: 같은 시나리오의 두 보고서를 A/B 순서를 바꿔 두 번 비교하고, 엇갈리면 무승부로 봅니다.
 
 Judge는 temperature 0과 JSON 스키마 structured output을 씁니다. 모델은 `JUDGE_MODEL_NAME`(가능하면 에이전트와 다른 모델)으로 정하며, 비우면 에이전트 모델을 씁니다. LangSmith 키가 있으면 Dataset `log-trace-eval-s1-s4`를 갱신하고 `evaluate()`로 Experiment `<variant>-<run_set>`을 남기며, 에이전트 trace에도 판정 feedback을 붙입니다.
 
-**baseline-v0 기준 점수** ([runs/20261001-152522/baseline/comparison.md](runs/20261001-152522/baseline/comparison.md))
+**원본 에이전트(1일차 에이전트, git tag `baseline-v0`)의 기준 점수** ([runs/20261001-152522/baseline/comparison.md](runs/20261001-152522/baseline/comparison.md))
 
 | | S1 | S2 | S3 | S4 |
 |---|---|---|---|---|
 | 통과 항목 | 9/9 | 8/9 | 6/9 | 9/9 |
 | 종합 점수 | 5 | 4 | 2 | 5 |
 
-**Meta-Harness 사이클 1**: 개선 에이전트가 S2 영향 범위 실패를 진단하고 log-trace 스킬 한 줄을 고친 v1을 만들었다. 결과는 S2 개선 없음, S3 항목 회귀, pairwise 엇갈림이라 **무승부(promote 안 함)** 였다. v1 반복 실행은 너무 오래 걸려 1회차에서 끊었다. 실행 시간 개선 방향은 [docs/improvement_log.md](docs/improvement_log.md)에 정리했다.
+**Meta-Harness 사이클 1**: 개선 에이전트가 S2 영향 범위 실패를 진단하고, log-trace 스킬 한 줄("영향 범위는 다른 캠페인을 실제로 조회해 확인")을 고친 개선안 1을 만들었다. 결과는 S2 개선 없음, S3 항목 하락, 직접 비교 결과 엇갈림이라 **무승부**였고, 원본 에이전트를 그대로 유지했다. 개선안 1의 반복 실행은 너무 오래 걸려 1번째 실행에서 끊었다. 실행 시간 개선 방향은 [docs/improvement_log.md](docs/improvement_log.md)에 정리했다.
 
 ## 실행 명령
 
@@ -143,9 +158,9 @@ uv run python harness_improver.py "meta-harness 로 log-trace 에이전트를 S1
 LANGGRAPH_TUNNEL=0 uv run python langchain-deepagents.py
 ```
 
-### Studio에서 직접 실행한 보고서를 baseline-v0과 비교하기
+### Studio에서 직접 실행한 보고서를 원본 에이전트 기준 점수와 비교하기
 
-1. LangSmith Studio의 `deepagent` 그래프에서 S1~S4 질문을 각각 **New Thread**로 실행합니다.
+1. LangSmith Studio의 `deepagent` 그래프에서 S1\~S4 질문을 각각 **New Thread**로 실행합니다.
 2. 대화마다 thread ID로 보고서와 trace 지표를 저장합니다. 첫 시나리오에만 `--new`를 붙입니다.
 
    ```bash
@@ -155,7 +170,7 @@ LANGGRAPH_TUNNEL=0 uv run python langchain-deepagents.py
    uv run python eval/run_scenarios.py save S4 --thread-id <id> --variant studio
    ```
 
-3. Judge로 채점하고 baseline-v0 기준 점수와 비교합니다.
+3. Judge로 채점하고 원본 에이전트 기준 점수(`runs/20261001-152522/baseline`)와 비교합니다.
 
    ```bash
    uv run python eval/judge.py score runs/<KST>/studio

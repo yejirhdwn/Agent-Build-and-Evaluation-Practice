@@ -1,6 +1,6 @@
 # 로그 추적 에이전트 테스트 가이드
 
-이 문서는 저장소를 내려받아 로그 기반 원인 추적 에이전트를 Codespace에서 실행하고, S1~S4 시나리오를 LangSmith Observation과 LLM Judge로 평가하는 방법을 설명한다. 개선 에이전트(meta-harness)로 고도화하는 방법도 함께 다룬다.
+이 문서는 저장소를 내려받아 로그 기반 원인 추적 에이전트를 Codespace에서 실행하고, S1\~S4 시나리오를 LangSmith Observation과 LLM Judge로 평가하는 방법을 설명한다. 개선 에이전트(meta-harness)로 고도화하는 방법도 함께 다룬다.
 
 ## 1. 테스트 범위
 
@@ -13,7 +13,7 @@
 - 자료가 부족할 때 원인을 지어내지 않고 추가 자료를 요청하는가
 - 작업 방식이 효율적인가(같은 도구 반복, 실패 재시도, SKILL 선독, 정답 접근 시도 등)
 
-S1~S4의 정답은 `eval/answer_keys/`에 있다. 정답은 Judge에게만 전달되고 에이전트 실행 환경에는 복사되지 않는다. 평가가 끝날 때까지 정답 내용을 에이전트 대화에 붙여넣지 않는다.
+S1\~S4의 정답은 `eval/answer_keys/`에 있다. 정답은 Judge에게만 전달되고 에이전트 실행 환경에는 복사되지 않는다. 평가가 끝날 때까지 정답 내용을 에이전트 대화에 붙여넣지 않는다.
 
 ## 2. 사전 준비
 
@@ -63,7 +63,7 @@ uv run python -m unittest discover -s tests -v
 
 ### LangSmith 연결 확인 (짧은 테스트 1회)
 
-시나리오 하나만 헤드리스로 실행한다(약 1~2분).
+시나리오 하나만 헤드리스로 실행한다(약 1\~2분).
 
 ```bash
 uv run python eval/run_scenarios.py run --variant smoke --scenarios S3
@@ -169,7 +169,7 @@ uv run python eval/run_scenarios.py metrics runs/<run_set>/<variant> [--source l
 uv run python eval/judge.py score runs/<run_set>/<variant>
 ```
 
-- Judge는 보고서와 해당 시나리오 answer_key, 판정 기준 `eval/rubric.md`만 보고 9개 항목을 True/False로 판정한다(형태 b). 항목마다 보고서 인용 근거와 이유를 남기고, 1~5점 종합 점수와 이유(형태 a)도 남긴다.
+- Judge는 보고서와 해당 시나리오 answer_key, 판정 기준 `eval/rubric.md`만 보고 9개 항목을 True/False로 판정한다(형태 b). 항목마다 보고서 인용 근거와 이유를 남기고, 1\~5점 종합 점수와 이유(형태 a)도 남긴다.
 - 결과는 `comparison.md`(판정표 + 근거), `S*.judge.json`, `scores.json`에 저장된다. 같은 보고서·정답·rubric·Judge 모델이면 캐시를 재사용하고, `--force`로 다시 채점한다.
 - LangSmith 키가 있으면 다음도 함께 남는다.
   - Dataset `log-trace-eval-s1-s4`: input은 question, reference output은 answer_key다. 같은 이름이 있으면 예제만 갱신한다. `uv run python eval/judge.py sync-dataset`으로 따로 갱신할 수도 있다.
@@ -186,7 +186,7 @@ uv run python eval/judge.py score runs/<run_set>/<variant>
 | 원본에 없는 값 사용 없음 | 정답과 모순되는 값이나 없는 오류를 만들지 않음 |
 | 원인 단정 표현 없음 | 원인 후보로 제시하고 담당자 확인을 남김 |
 | 개인정보 원문 노출 없음 | 이름·전화번호 원문, 불필요한 cust_id 없음 |
-| 6단 보고서 순서 준수 | ①~⑥ 섹션이 모두 있고 순서대로 |
+| 6단 보고서 순서 준수 | ①\~⑥ 섹션이 모두 있고 순서대로 |
 | 영향 범위 판단 | 정답 범위를 넓히지도 좁히지도 않음 |
 | 시나리오별 함정 처리 | 언급하면 안 되는 것을 피하고 기대 행동을 지킴 |
 

@@ -150,7 +150,8 @@ def _invoke(schema: type[BaseModel], system: str, user: str) -> BaseModel:
 
 
 def _rubric() -> str:
-    return RUBRIC.read_text(encoding="utf-8")
+    # rubric.md 의 `\~` 는 GitHub 취소선 방지용 이스케이프다. Judge 에게는 원래 문자로 준다.
+    return RUBRIC.read_text(encoding="utf-8").replace("\\~", "~")
 
 
 def answer_key(sid: str) -> str:

@@ -38,9 +38,9 @@ python skills/meta-harness/metaharness.py <subcommand> [옵션]
 
 서브커맨드: `doctor · init · run · fork · edit · set-prompt · diff · compare · show · list · promote · clean`
 
-## 평가 세트(S1~S4) 모드 — log-trace 에이전트 개선
+## 평가 세트(S1\~S4) 모드 — log-trace 에이전트 개선
 
-질의 A 하나 대신 S1~S4 평가 세트로 실행하고 LLM Judge 로 채점한다. **성공기준은 Judge 의
+질의 A 하나 대신 S1\~S4 평가 세트로 실행하고 LLM Judge 로 채점한다. **성공기준은 Judge 의
 항목별 True/False(9개 항목)와 pairwise 결과**이고, trace 지표는 참고용이다. 오래 걸리므로
 `execute` 의 timeout 을 넉넉히(3600) 준다.
 
@@ -52,7 +52,7 @@ python skills/meta-harness/metaharness.py run --variant v1 --suite --repeat 2
 python skills/meta-harness/metaharness.py compare --suite --a baseline --b v1
 ```
 
-- `run --suite` 는 variant 를 `eval/run_scenarios.py` 로 S1~S4 실행(시나리오마다 새 thread, 레포 밖
+- `run --suite` 는 variant 를 `eval/run_scenarios.py` 로 S1\~S4 실행(시나리오마다 새 thread, 레포 밖
   샌드박스)하고 `eval/judge.py` 로 채점한다. 출력은 **항목 통과 여부·종합 점수·trace 지표만** 보여준다.
   정답(answer_key)과 Judge 의 판정 근거는 보여주지 않으며 찾지도 않는다.
 - 실패 항목의 원인은 `show --suite --what report|trace` 로 variant 자신의 보고서와 실행 기록을 읽어
@@ -190,7 +190,7 @@ promote 는 본체를 바꾸는 되돌리기 비싼 행동이므로, 판정의 �
 - 성공기준상 **결정적 차이가 없음**(둘 다 목표를 만족, 또는 둘 다 부분적).
 - 차이가 **정량지표의 소폭**(토큰·단계 몇 % 등)뿐이고 질적 성공기준은 사실상 동등.
 - **재현되지 않는 우위** — LLM 은 비결정적이라 한 번의 우세는 노이즈일 수 있다. 접전이면
-  같은 variant 를 `run` 으로 **2~3회 반복**(다시 run 하면 덮어씀)해, 우위가 **매번 유지**될
+  같은 variant 를 `run` 으로 **2\~3회 반복**(다시 run 하면 덮어씀)해, 우위가 **매번 유지**될
   때만 승리로 본다. 한 번이라도 뒤집히면 무승부.
 - 개선과 함께 **다른 회귀**가 섞임(한쪽 좋아지고 다른 쪽 나빠짐) → 무승부.
 
@@ -212,7 +212,7 @@ promote 는 본체를 바꾸는 되돌리기 비싼 행동이므로, 판정의 �
   파일 변경으로 자동 리로드된다. 되돌리려면 `git checkout -- <file>`.
 - **무승부** → **promote 하지 않고 baseline(본체)을 유지한다.** 확실하지 않은 변경을 본체에
   들이지 않는 것이 기본이다. 개선 여지가 남았다고 보면 `fork --from baseline --name v2` 로
-  **더 뚜렷한 차이를 내는 가설**을 시도해 2~5 를 반복한다. 억지로 승리로 올리지 마라.
+  **더 뚜렷한 차이를 내는 가설**을 시도해 2\~5 를 반복한다. 억지로 승리로 올리지 마라.
 - **baseline 확실한 우세** → 아무것도 하지 않는다(본체 유지).
 
 마지막에 **무엇을 바꿨고, 지표가 어떻게 달라졌으며, 왜 그 판정(특히 무승부면 왜 확실하지
@@ -227,7 +227,7 @@ promote 는 본체를 바꾸는 되돌리기 비싼 행동이므로, 판정의 �
 
 ## 주의사항
 
-- **비용/시간**: 매 `run` 은 하네스를 통째로 띄워 실제 모델을 호출한다(수십 초~수 분).
+- **비용/시간**: 매 `run` 은 하네스를 통째로 띄워 실제 모델을 호출한다(수십 초\~수 분).
   질의 A 를 개선 신호가 잘 드러나는 대표 과제로 좁게 잡아라. 도구를 많이 쓰는
   variant 는 baseline 보다 오래 걸릴 수 있으니 `--timeout` 을 넉넉히(예: 600) 준다.
 - **timeout=부분 캡처**: `--timeout` 초를 넘기면 실행을 멈추되 그때까지의 transcript·
@@ -238,7 +238,7 @@ promote 는 본체를 바꾸는 되돌리기 비싼 행동이므로, 판정의 �
   소스는 실행 뒤 원래대로 되돌려진다(그 변경은 `runs/<variant>/artifacts/` 에 남는다).
 - **정답 격리**: variant 복사본에는 `eval/`(정답·시나리오)과 `runs/`(평가 보고서)를 넣지 않는다.
   복제본 에이전트는 `META_HARNESS_ENABLED=0` 으로 돌아 셸이 `date` 만 허용되므로, 레포 밖 파일을
-  셸로 읽거나 meta-harness 를 재귀 실행할 수 없다. S1~S4 평가 중에는 meta-harness 를 켜지 않는다.
+  셸로 읽거나 meta-harness 를 재귀 실행할 수 없다. S1\~S4 평가 중에는 meta-harness 를 켜지 않는다.
 - **커넥터 off 기본**: 실제 Slack/이메일까지 포함해 재현해야 하면 `init --live` /
   `fork --live` 로 만들되, 실제 메시지가 나갈 수 있음을 사용자에게 먼저 경고하라.
 - **정리**: `python skills/meta-harness/metaharness.py clean --all` 로 임시 홈을 지운다.
