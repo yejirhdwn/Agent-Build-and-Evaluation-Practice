@@ -1,0 +1,60 @@
+2026-09-24 02:00:02.114 [INFO ] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Job started. campaigns=2
+2026-09-24 02:00:02.115 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=1 state=RUNNING
+2026-09-24 02:00:02.116 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=2 state=RUNNING
+2026-09-24 02:00:02.117 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=3 state=RUNNING
+2026-09-24 02:00:02.118 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=4 state=RUNNING
+2026-09-24 02:00:02.119 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=5 state=RUNNING
+2026-09-24 02:00:02.120 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=6 state=RUNNING
+2026-09-24 02:00:02.121 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=7 state=RUNNING
+2026-09-24 02:00:02.122 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=8 state=RUNNING
+2026-09-24 02:00:02.123 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=9 state=RUNNING
+2026-09-24 02:00:02.124 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=10 state=RUNNING
+2026-09-24 02:00:02.125 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=11 state=RUNNING
+2026-09-24 02:00:02.126 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=12 state=RUNNING
+2026-09-24 02:00:02.127 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=13 state=RUNNING
+2026-09-24 02:00:02.128 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=14 state=RUNNING
+2026-09-24 02:00:02.129 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=15 state=RUNNING
+2026-09-24 02:00:02.130 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=16 state=RUNNING
+2026-09-24 02:00:02.131 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=17 state=RUNNING
+2026-09-24 02:00:02.132 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=18 state=RUNNING
+2026-09-24 02:00:02.133 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=19 state=RUNNING
+2026-09-24 02:00:02.134 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=20 state=RUNNING
+2026-09-24 02:00:02.135 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=21 state=RUNNING
+2026-09-24 02:00:02.136 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=22 state=RUNNING
+2026-09-24 02:00:02.137 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=23 state=RUNNING
+2026-09-24 02:00:02.138 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=24 state=RUNNING
+2026-09-24 02:00:02.139 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=25 state=RUNNING
+2026-09-24 02:00:02.140 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=26 state=RUNNING
+2026-09-24 02:00:02.141 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=27 state=RUNNING
+2026-09-24 02:00:02.142 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=28 state=RUNNING
+2026-09-24 02:00:02.143 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=29 state=RUNNING
+2026-09-24 02:00:02.144 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=30 state=RUNNING
+2026-09-24 02:00:02.145 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=31 state=RUNNING
+2026-09-24 02:00:02.146 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=32 state=RUNNING
+2026-09-24 02:00:02.147 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=33 state=RUNNING
+2026-09-24 02:00:02.148 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=34 state=RUNNING
+2026-09-24 02:00:02.149 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=35 state=RUNNING
+2026-09-24 02:00:02.150 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=36 state=RUNNING
+2026-09-24 02:00:02.151 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=37 state=RUNNING
+2026-09-24 02:00:02.152 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=38 state=RUNNING
+2026-09-24 02:00:02.153 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=39 state=RUNNING
+2026-09-24 02:00:02.154 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=40 state=RUNNING
+2026-09-24 02:00:02.155 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=41 state=RUNNING
+2026-09-24 02:00:02.156 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=42 state=RUNNING
+2026-09-24 02:00:02.157 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=43 state=RUNNING
+2026-09-24 02:00:02.158 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=44 state=RUNNING
+2026-09-24 02:00:02.159 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=45 state=RUNNING
+2026-09-24 02:00:02.160 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=46 state=RUNNING
+2026-09-24 02:00:02.161 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=47 state=RUNNING
+2026-09-24 02:00:02.162 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=48 state=RUNNING
+2026-09-24 02:00:02.163 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=49 state=RUNNING
+2026-09-24 02:00:02.164 [DEBUG] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Periodic checkpoint. sequence=50 state=RUNNING
+2026-09-24 02:04:00.000 [INFO ] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Campaign start. cmp_id=20260923CMP001 send_count=0
+2026-09-24 02:05:00.000 [INFO ] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Result rows updated. cmp_id=20260923CMP001 success_count=0 fail_count=0
+2026-09-24 02:06:00.000 [INFO ] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Offer responses loaded. cmp_id=20260923CMP001 target_table=OFFER_RESULT response_count=0 offer_success=0
+2026-09-24 02:07:00.000 [INFO ] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Campaign end. cmp_id=20260923CMP001 updated=0 failed=0
+2026-09-24 02:08:00.000 [INFO ] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Campaign start. cmp_id=20260923CMP002 send_count=24500
+2026-09-24 02:09:00.000 [INFO ] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Result rows updated. cmp_id=20260923CMP002 success_count=24010 fail_count=490
+2026-09-24 02:10:00.000 [INFO ] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Offer responses loaded. cmp_id=20260923CMP002 target_table=OFFER_RESULT response_count=4081 offer_success=3121
+2026-09-24 02:11:00.000 [INFO ] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Campaign end. cmp_id=20260923CMP002 updated=24500 failed=0
+2026-09-24 02:50:00.000 [INFO ] [R01_RESULT] [run=20260924-R01-01] [ResultReceiveJob] Job finished. processed=24500 failed=0 skip=0

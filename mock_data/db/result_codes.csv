@@ -1,0 +1,6 @@
+result_code,description,category
+RLY-0000,Delivered,SUCCESS
+RLY-2001,Destination number rejected,RECIPIENT
+RLY-3001,Relay response timeout,RETRYABLE
+RLY-4001,Recipient opted out,RECIPIENT
+RLY-5001,Result file not ready; retryable,RETRYABLE

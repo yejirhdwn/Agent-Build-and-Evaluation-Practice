@@ -1,5 +1,20 @@
-"""목업 데이터를 사용하는 캠페인 로그 추적 에이전트."""
+"""범용 업무 처리 Deep Agent (cowork 스타일).
 
+- 실제 파일시스템 조작(ls/read_file/write_file/edit_file/glob/grep)과
+  셸 명령 실행(execute), 계획 수립(write_todos)을 기본 제공한다.
+- 다양한 커넥터(웹 검색, MCP 서버 등)를 `build_connector_tools()`에서 조립해 붙인다.
+
+이 파일을 직접 실행하면 LangGraph Studio(deep agent UI)가 뜬다.
+langgraph.json 이 아래 `agent` 그래프를 참조한다.
+
+실행 환경에 따라 자동으로 동작이 달라진다:
+- 로컬: `langgraph dev` 로 서버를 띄우고 브라우저로 Studio 를 연다.
+- 원격(Codespaces/devcontainer/Gitpod): 로컬 브라우저가 없고 기본 포트포워딩이
+  Studio 에서 안 붙으므로, `--tunnel`(Cloudflare) 로 공개 URL 을 만들어 Studio 가
+  그 URL 로 직접 연결하게 한다. LANGGRAPH_TUNNEL=0/1 로 강제 off/on 가능.
+"""
+
+import json
 import os
 import shutil
 import threading
@@ -14,7 +29,9 @@ from deepagents.backends import LocalShellBackend
 # 프레임워크와 동일하게 계산하기 위해 그대로 가져다 쓴다.
 from deepagents._models import get_model_identifier, get_model_provider
 from langchain.chat_models import init_chat_model
-from trace_tools import build_trace_tools
+
+# 로컬 모듈: 외부 서비스 커넥터(Slack / Telegram / Email)
+from connectors import build_messaging_tools
 
 # ---------------------------------------------------------------------------
 # 환경변수 & 모델
@@ -126,6 +143,12 @@ _sync_tree(_SEED_SKILLS, _WS_SKILLS)
 if not _WS_AGENTS.exists():
     _sync_file(_SEED_AGENTS, _WS_AGENTS)
 
+# 이메일 트리거 규칙 파일(workspace/email_triggers.json). 없으면 빈 배열로 만들어
+# 두어(스킬 set-email-triggers 로 CRUD) 위치를 발견하기 쉽게 한다.
+_triggers = WORKSPACE / "email_triggers.json"
+if not _triggers.exists():
+    _triggers.write_text("[]\n", encoding="utf-8")
+
 # 런타임 동기화: workspace → seed 를 백그라운드에서 실시간 미러한다.
 # watchfiles 로 workspace/skills 와 workspace/AGENTS.md 변경을 감지해 곧바로 시드에 반영.
 # 변경된 '경로'만 처리하므로(추가/수정=복사, 삭제=제거) 오삭제 위험이 없고, 내용 비교 후
@@ -186,8 +209,101 @@ backend = LocalShellBackend(
 )
 
 
-# 로그 추적 도구만 에이전트에 등록한다.
-connector_tools = build_trace_tools()
+# ---------------------------------------------------------------------------
+# 커넥터(도구) — 필요에 따라 자동으로 붙는다
+# ---------------------------------------------------------------------------
+def _run_async(coro):
+    """이벤트 루프 유무와 무관하게 코루틴을 동기 실행한다."""
+    import asyncio
+    import concurrent.futures
+
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(coro)
+    # 이미 실행 중인 루프가 있으면 별도 스레드에서 돌린다.
+    with concurrent.futures.ThreadPoolExecutor(1) as ex:
+        return ex.submit(lambda: asyncio.run(coro)).result()
+
+
+def _web_search_tools() -> list:
+    """웹 검색 커넥터(Tavily). TAVILY_API_KEY 가 있으면 자동 활성화."""
+    if not os.getenv("TAVILY_API_KEY"):
+        return []
+    try:
+        from langchain_tavily import TavilySearch
+        from langchain_core.tools import StructuredTool
+    except ImportError:
+        print("[connector] langchain-tavily 미설치 — 웹 검색 건너뜀")
+        return []
+
+    base = TavilySearch(max_results=5)
+
+    def _sanitize(kwargs: dict) -> dict:
+        # Tavily 는 finance 토픽 + fast/ultra-fast search_depth 조합을 400 으로 거부한다.
+        # LLM 이 이 조합을 고르면 search_depth 를 advanced 로 낮춰 유효한 호출로 보정한다.
+        if kwargs.get("topic") == "finance" and kwargs.get("search_depth") in ("fast", "ultra-fast"):
+            kwargs = {**kwargs, "search_depth": "advanced"}
+        return kwargs
+
+    def _search(**kwargs):
+        return base.invoke(_sanitize(kwargs))
+
+    async def _asearch(**kwargs):
+        return await base.ainvoke(_sanitize(kwargs))
+
+    print("[connector] Tavily 웹 검색 활성화")
+    return [
+        StructuredTool.from_function(
+            func=_search,
+            coroutine=_asearch,
+            name=base.name,
+            description=base.description,
+            args_schema=base.args_schema,
+        )
+    ]
+
+
+def _mcp_tools() -> list:
+    """MCP 커넥터. 프로젝트 루트의 mcp_servers.json 이 있으면 로드.
+
+    형식은 mcp_servers.example.json 참고. 빈 `{}` 면 아무것도 붙지 않는다.
+    """
+    config_path = Path("mcp_servers.json")
+    if not config_path.exists():
+        return []
+    try:
+        servers = json.loads(config_path.read_text(encoding="utf-8"))
+    except Exception as e:
+        print(f"[connector] mcp_servers.json 파싱 실패(무시): {e}")
+        return []
+    if not servers:  # 빈 템플릿({}) 이면 조용히 건너뛴다
+        return []
+    try:
+        from langchain_mcp_adapters.client import MultiServerMCPClient
+    except ImportError:
+        print("[connector] langchain-mcp-adapters 미설치 — MCP 커넥터 건너뜀")
+        return []
+    try:
+        client = MultiServerMCPClient(servers)
+        tools = _run_async(client.get_tools())
+        print(f"[connector] MCP 서버 {len(servers)}개에서 도구 {len(tools)}개 로드")
+        return tools
+    except Exception as e:  # 커넥터 하나가 실패해도 에이전트는 떠야 한다
+        print(f"[connector] MCP 로드 실패(무시하고 진행): {e}")
+        return []
+
+
+def build_connector_tools() -> list:
+    """붙일 커넥터 도구를 모두 조립한다. 여기에 새 커넥터를 추가하면 된다."""
+    tools: list = []
+    # 이 에이전트는 목업 로그와 읽기 전용 추적 도구만 사용한다.
+    tools += _mcp_tools()
+    tools += build_messaging_tools()  # Slack / Telegram / Email (connectors.py)
+    return tools
+
+
+connector_tools = build_connector_tools()
 
 
 # ---------------------------------------------------------------------------
@@ -392,6 +508,21 @@ def _studio_url(base_url: str) -> str:
 if __name__ == "__main__":
     import subprocess
     import sys
+
+    # 메신저 커넥터가 '실제로 연결되는' 채널이 있으면 공용 게이트웨이를 백그라운드로
+    # 함께 띄운다(env 만 있는 게 아니라 라이브 연결 확인까지 통과한 채널만 실행).
+    # 채널이 하나도 없으면 게이트웨이 에이전트는 만들어지지 않는다.
+    try:
+        import gateway
+        from langgraph.checkpoint.memory import InMemorySaver
+
+        channels = gateway.start_in_background(
+            lambda: build_agent(checkpointer=InMemorySaver())
+        )
+        if channels:
+            print(f"게이트웨이 실행 중 → {', '.join(channels)} (메신저에서 에이전트 사용 가능)")
+    except Exception as e:  # 게이트웨이가 실패해도 Studio UI 는 떠야 한다
+        print(f"게이트웨이 시작 실패(무시하고 UI만 실행): {e}")
 
     # 이 파일을 직접 실행하면 langgraph dev 서버를 띄우고 LangGraph Studio를 연다.
     # langgraph dev 는 langgraph.json 을 읽어 위의 `agent` 그래프를 서빙한다.

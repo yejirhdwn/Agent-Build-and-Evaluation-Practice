@@ -1,0 +1,60 @@
+2026-09-23 17:00:00.114 [INFO ] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Job started. campaigns=2
+2026-09-23 17:00:00.115 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=1 state=RUNNING
+2026-09-23 17:00:00.116 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=2 state=RUNNING
+2026-09-23 17:00:00.117 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=3 state=RUNNING
+2026-09-23 17:00:00.118 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=4 state=RUNNING
+2026-09-23 17:00:00.119 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=5 state=RUNNING
+2026-09-23 17:00:00.120 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=6 state=RUNNING
+2026-09-23 17:00:00.121 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=7 state=RUNNING
+2026-09-23 17:00:00.122 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=8 state=RUNNING
+2026-09-23 17:00:00.123 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=9 state=RUNNING
+2026-09-23 17:00:00.124 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=10 state=RUNNING
+2026-09-23 17:00:00.125 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=11 state=RUNNING
+2026-09-23 17:00:00.126 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=12 state=RUNNING
+2026-09-23 17:00:00.127 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=13 state=RUNNING
+2026-09-23 17:00:00.128 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=14 state=RUNNING
+2026-09-23 17:00:00.129 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=15 state=RUNNING
+2026-09-23 17:00:00.130 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=16 state=RUNNING
+2026-09-23 17:00:00.131 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=17 state=RUNNING
+2026-09-23 17:00:00.132 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=18 state=RUNNING
+2026-09-23 17:00:00.133 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=19 state=RUNNING
+2026-09-23 17:00:00.134 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=20 state=RUNNING
+2026-09-23 17:00:00.135 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=21 state=RUNNING
+2026-09-23 17:00:00.136 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=22 state=RUNNING
+2026-09-23 17:00:00.137 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=23 state=RUNNING
+2026-09-23 17:00:00.138 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=24 state=RUNNING
+2026-09-23 17:00:00.139 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=25 state=RUNNING
+2026-09-23 17:00:00.140 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=26 state=RUNNING
+2026-09-23 17:00:00.141 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=27 state=RUNNING
+2026-09-23 17:00:00.142 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=28 state=RUNNING
+2026-09-23 17:00:00.143 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=29 state=RUNNING
+2026-09-23 17:00:00.144 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=30 state=RUNNING
+2026-09-23 17:00:00.145 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=31 state=RUNNING
+2026-09-23 17:00:00.146 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=32 state=RUNNING
+2026-09-23 17:00:00.147 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=33 state=RUNNING
+2026-09-23 17:00:00.148 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=34 state=RUNNING
+2026-09-23 17:00:00.149 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=35 state=RUNNING
+2026-09-23 17:00:00.150 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=36 state=RUNNING
+2026-09-23 17:00:00.151 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=37 state=RUNNING
+2026-09-23 17:00:00.152 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=38 state=RUNNING
+2026-09-23 17:00:00.153 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=39 state=RUNNING
+2026-09-23 17:00:00.154 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=40 state=RUNNING
+2026-09-23 17:00:00.155 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=41 state=RUNNING
+2026-09-23 17:00:00.156 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=42 state=RUNNING
+2026-09-23 17:00:00.157 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=43 state=RUNNING
+2026-09-23 17:00:00.158 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=44 state=RUNNING
+2026-09-23 17:00:00.159 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=45 state=RUNNING
+2026-09-23 17:00:00.160 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=46 state=RUNNING
+2026-09-23 17:00:00.161 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=47 state=RUNNING
+2026-09-23 17:00:00.162 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Periodic checkpoint. sequence=48 state=RUNNING
+2026-09-23 17:00:02.000 [INFO ] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Campaign start. cmp_id=20260923CMP001 planned_count=182400
+2026-09-23 17:00:05.000 [INFO ] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Campaign start. cmp_id=20260923CMP002 planned_count=25000
+2026-09-23 17:01:02.000 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Candidate count. cmp_id=20260923CMP001 candidate_count=182400
+2026-09-23 17:01:05.000 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Candidate count. cmp_id=20260923CMP002 candidate_count=25000
+2026-09-23 17:02:05.000 [INFO ] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Exclusion count. cmp_id=20260923CMP002 reason=optout count=200
+2026-09-23 17:02:05.000 [INFO ] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Exclusion count. cmp_id=20260923CMP002 reason=fatigue_7d count=200
+2026-09-23 17:02:05.000 [INFO ] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Exclusion count. cmp_id=20260923CMP002 reason=duplicate count=100
+2026-09-23 17:10:02.000 [INFO ] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Campaign end. cmp_id=20260923CMP001 target_count=182400 excluded_count=0 elapsed_sec=540
+2026-09-23 17:10:05.000 [INFO ] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Campaign end. cmp_id=20260923CMP002 target_count=24500 excluded_count=500 elapsed_sec=540
+2026-09-23 17:12:00.000 [WARN ] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Slow query warning. elapsed_ms=812 harmless=true
+2026-09-23 17:12:01.000 [INFO ] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Job finished. processed=207400 target_count=206900 failed=0 skip=0

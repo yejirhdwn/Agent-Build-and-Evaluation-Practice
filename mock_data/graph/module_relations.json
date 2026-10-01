@@ -1,0 +1,84 @@
+{
+  "relations": [
+    {
+      "from": "SCR_CMP_RESULT",
+      "relation": "CALLS",
+      "to": "CampaignResultController"
+    },
+    {
+      "from": "CampaignResultController",
+      "relation": "CALLS",
+      "to": "CampaignResultService"
+    },
+    {
+      "from": "CampaignResultService",
+      "relation": "CALLS",
+      "to": "CampaignResultDao"
+    },
+    {
+      "from": "CampaignResultDao",
+      "relation": "READS",
+      "to": "CMP_PERF_SUM"
+    },
+    {
+      "from": "TargetExtractJob",
+      "relation": "READS",
+      "to": "CAMPAIGN|CUST_MASTER|CONTACT_HIST"
+    },
+    {
+      "from": "TargetExtractJob",
+      "relation": "WRITES",
+      "to": "CMP_TARGET"
+    },
+    {
+      "from": "OfferAssignJob",
+      "relation": "READS",
+      "to": "CMP_TARGET|OFFER_MASTER"
+    },
+    {
+      "from": "OfferAssignJob",
+      "relation": "WRITES",
+      "to": "CMP_OFFER"
+    },
+    {
+      "from": "MessageBuildJob",
+      "relation": "READS",
+      "to": "CMP_OFFER|MSG_TEMPLATE"
+    },
+    {
+      "from": "MessageBuildJob",
+      "relation": "WRITES",
+      "to": "CHNL_SEND_REQ"
+    },
+    {
+      "from": "ChannelSendJob",
+      "relation": "READS",
+      "to": "CHNL_SEND_REQ"
+    },
+    {
+      "from": "ChannelSendJob",
+      "relation": "WRITES",
+      "to": "RELAY_OUT|SEND_HIST"
+    },
+    {
+      "from": "ResultReceiveJob",
+      "relation": "WRITES",
+      "to": "SEND_HIST|OFFER_RESULT"
+    },
+    {
+      "from": "ResultReceiveJob",
+      "relation": "WRITES_BEFORE_20260924",
+      "to": "OFFER_RESP_HIST"
+    },
+    {
+      "from": "CampaignPerfSumJob",
+      "relation": "READS",
+      "to": "SEND_HIST|OFFER_RESP_HIST"
+    },
+    {
+      "from": "CampaignPerfSumJob",
+      "relation": "WRITES",
+      "to": "CMP_PERF_SUM"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+2026-09-26 04:00:02.114 [INFO ] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Job started. campaigns=2
+2026-09-26 04:00:02.115 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=1 state=RUNNING
+2026-09-26 04:00:02.116 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=2 state=RUNNING
+2026-09-26 04:00:02.117 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=3 state=RUNNING
+2026-09-26 04:00:02.118 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=4 state=RUNNING
+2026-09-26 04:00:02.119 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=5 state=RUNNING
+2026-09-26 04:00:02.120 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=6 state=RUNNING
+2026-09-26 04:00:02.121 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=7 state=RUNNING
+2026-09-26 04:00:02.122 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=8 state=RUNNING
+2026-09-26 04:00:02.123 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=9 state=RUNNING
+2026-09-26 04:00:02.124 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=10 state=RUNNING
+2026-09-26 04:00:02.125 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=11 state=RUNNING
+2026-09-26 04:00:02.126 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=12 state=RUNNING
+2026-09-26 04:00:02.127 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=13 state=RUNNING
+2026-09-26 04:00:02.128 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=14 state=RUNNING
+2026-09-26 04:00:02.129 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=15 state=RUNNING
+2026-09-26 04:00:02.130 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=16 state=RUNNING
+2026-09-26 04:00:02.131 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=17 state=RUNNING
+2026-09-26 04:00:02.132 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=18 state=RUNNING
+2026-09-26 04:00:02.133 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=19 state=RUNNING
+2026-09-26 04:00:02.134 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=20 state=RUNNING
+2026-09-26 04:00:02.135 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=21 state=RUNNING
+2026-09-26 04:00:02.136 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=22 state=RUNNING
+2026-09-26 04:00:02.137 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=23 state=RUNNING
+2026-09-26 04:00:02.138 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=24 state=RUNNING
+2026-09-26 04:00:02.139 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=25 state=RUNNING
+2026-09-26 04:00:02.140 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=26 state=RUNNING
+2026-09-26 04:00:02.141 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=27 state=RUNNING
+2026-09-26 04:00:02.142 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=28 state=RUNNING
+2026-09-26 04:00:02.143 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=29 state=RUNNING
+2026-09-26 04:00:02.144 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=30 state=RUNNING
+2026-09-26 04:00:02.145 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=31 state=RUNNING
+2026-09-26 04:00:02.146 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=32 state=RUNNING
+2026-09-26 04:00:02.147 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=33 state=RUNNING
+2026-09-26 04:00:02.148 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=34 state=RUNNING
+2026-09-26 04:00:02.149 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=35 state=RUNNING
+2026-09-26 04:00:02.150 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=36 state=RUNNING
+2026-09-26 04:00:02.151 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=37 state=RUNNING
+2026-09-26 04:00:02.152 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=38 state=RUNNING
+2026-09-26 04:00:02.153 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=39 state=RUNNING
+2026-09-26 04:00:02.154 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=40 state=RUNNING
+2026-09-26 04:00:02.155 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=41 state=RUNNING
+2026-09-26 04:00:02.156 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=42 state=RUNNING
+2026-09-26 04:00:02.157 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=43 state=RUNNING
+2026-09-26 04:00:02.158 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=44 state=RUNNING
+2026-09-26 04:00:02.159 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=45 state=RUNNING
+2026-09-26 04:00:02.160 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=46 state=RUNNING
+2026-09-26 04:00:02.161 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=47 state=RUNNING
+2026-09-26 04:00:02.162 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=48 state=RUNNING
+2026-09-26 04:00:02.163 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=49 state=RUNNING
+2026-09-26 04:00:02.164 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=50 state=RUNNING
+2026-09-26 04:00:02.165 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=51 state=RUNNING
+2026-09-26 04:00:02.166 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Periodic checkpoint. sequence=52 state=RUNNING
+2026-09-26 04:04:00.000 [INFO ] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Campaign start. cmp_id=20260925CMP001
+2026-09-26 04:05:00.000 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Aggregate query. cmp_id=20260925CMP001 source_table=OFFER_RESP_HIST target_count=80000 send_success=78400 offer_success=0
+2026-09-26 04:06:00.000 [INFO ] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Campaign end. cmp_id=20260925CMP001 target_count=80000 send_success=78400 offer_success=0
+2026-09-26 04:08:00.000 [INFO ] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Campaign start. cmp_id=20260925CMP002
+2026-09-26 04:09:00.000 [DEBUG] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Aggregate query. cmp_id=20260925CMP002 source_table=OFFER_RESP_HIST target_count=63000 send_success=61740 offer_success=0
+2026-09-26 04:10:00.000 [INFO ] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Campaign end. cmp_id=20260925CMP002 target_count=63000 send_success=61740 offer_success=0
+2026-09-26 04:50:00.000 [INFO ] [R02_PERF_SUM] [run=20260926-R02-01] [CampaignPerfSumJob] Job finished. processed=143000 failed=0 skip=0

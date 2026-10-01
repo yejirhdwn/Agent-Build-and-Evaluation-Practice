@@ -64,3 +64,7 @@
 ## 필수 설정
 
 `.env`의 `OPENAI_API_KEY`는 필수입니다. Tavily, Slack, Telegram, 이메일 연동은 해당 기능을 사용할 때만 각 키와 설정을 추가하면 됩니다. 자세한 환경변수 목록은 [`.env.example`](.env.example)을 참고하세요.
+
+## 로그 추적 에이전트 테스트
+
+목업 로그를 적재하고 LangSmith에서 S1~S4 시나리오를 실행·판정하려면 [로그 추적 테스트 가이드](docs/log-trace-test-guide.md)를 참고하세요.

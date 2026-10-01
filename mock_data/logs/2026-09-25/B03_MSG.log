@@ -1,0 +1,60 @@
+2026-09-25 18:00:00.114 [INFO ] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Job started. campaigns=2
+2026-09-25 18:00:00.115 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=1 state=RUNNING
+2026-09-25 18:00:00.116 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=2 state=RUNNING
+2026-09-25 18:00:00.117 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=3 state=RUNNING
+2026-09-25 18:00:00.118 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=4 state=RUNNING
+2026-09-25 18:00:00.119 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=5 state=RUNNING
+2026-09-25 18:00:00.120 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=6 state=RUNNING
+2026-09-25 18:00:00.121 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=7 state=RUNNING
+2026-09-25 18:00:00.122 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=8 state=RUNNING
+2026-09-25 18:00:00.123 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=9 state=RUNNING
+2026-09-25 18:00:00.124 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=10 state=RUNNING
+2026-09-25 18:00:00.125 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=11 state=RUNNING
+2026-09-25 18:00:00.126 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=12 state=RUNNING
+2026-09-25 18:00:00.127 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=13 state=RUNNING
+2026-09-25 18:00:00.128 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=14 state=RUNNING
+2026-09-25 18:00:00.129 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=15 state=RUNNING
+2026-09-25 18:00:00.130 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=16 state=RUNNING
+2026-09-25 18:00:00.131 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=17 state=RUNNING
+2026-09-25 18:00:00.132 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=18 state=RUNNING
+2026-09-25 18:00:00.133 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=19 state=RUNNING
+2026-09-25 18:00:00.134 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=20 state=RUNNING
+2026-09-25 18:00:00.135 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=21 state=RUNNING
+2026-09-25 18:00:00.136 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=22 state=RUNNING
+2026-09-25 18:00:00.137 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=23 state=RUNNING
+2026-09-25 18:00:00.138 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=24 state=RUNNING
+2026-09-25 18:00:00.139 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=25 state=RUNNING
+2026-09-25 18:00:00.140 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=26 state=RUNNING
+2026-09-25 18:00:00.141 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=27 state=RUNNING
+2026-09-25 18:00:00.142 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=28 state=RUNNING
+2026-09-25 18:00:00.143 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=29 state=RUNNING
+2026-09-25 18:00:00.144 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=30 state=RUNNING
+2026-09-25 18:00:00.145 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=31 state=RUNNING
+2026-09-25 18:00:00.146 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=32 state=RUNNING
+2026-09-25 18:00:00.147 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=33 state=RUNNING
+2026-09-25 18:00:00.148 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=34 state=RUNNING
+2026-09-25 18:00:00.149 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=35 state=RUNNING
+2026-09-25 18:00:00.150 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=36 state=RUNNING
+2026-09-25 18:00:00.151 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=37 state=RUNNING
+2026-09-25 18:00:00.152 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=38 state=RUNNING
+2026-09-25 18:00:00.153 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=39 state=RUNNING
+2026-09-25 18:00:00.154 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=40 state=RUNNING
+2026-09-25 18:00:00.155 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=41 state=RUNNING
+2026-09-25 18:00:00.156 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=42 state=RUNNING
+2026-09-25 18:00:00.157 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=43 state=RUNNING
+2026-09-25 18:00:00.158 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=44 state=RUNNING
+2026-09-25 18:00:00.159 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=45 state=RUNNING
+2026-09-25 18:00:00.160 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=46 state=RUNNING
+2026-09-25 18:00:00.161 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=47 state=RUNNING
+2026-09-25 18:00:00.162 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=48 state=RUNNING
+2026-09-25 18:00:00.163 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=49 state=RUNNING
+2026-09-25 18:00:00.164 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=50 state=RUNNING
+2026-09-25 18:00:00.165 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Periodic checkpoint. sequence=51 state=RUNNING
+2026-09-25 18:10:00.000 [INFO ] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Campaign start. cmp_id=20260925CMP001 input_count=80000
+2026-09-25 18:10:01.000 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Template rendered. cmp_id=20260925CMP001 template_id=TPL-G1 rendered_count=80000
+2026-09-25 18:10:05.000 [INFO ] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Campaign end. cmp_id=20260925CMP001 message_count=80000 failed=0 elapsed_sec=480
+2026-09-25 18:10:07.000 [INFO ] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Campaign start. cmp_id=20260925CMP002 input_count=63000
+2026-09-25 18:10:08.000 [DEBUG] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Template rendered. cmp_id=20260925CMP002 template_id=TPL-H1 rendered_count=63000
+2026-09-25 18:10:12.000 [INFO ] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Campaign end. cmp_id=20260925CMP002 message_count=63000 failed=0 elapsed_sec=480
+2026-09-25 18:15:00.000 [WARN ] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Retry queue empty. retry_count=0
+2026-09-25 18:15:01.000 [INFO ] [B03_MSG] [run=20260925-B03-01] [MessageBuildJob] Job finished. processed=143000 failed=0 skip=0

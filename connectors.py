@@ -555,6 +555,9 @@ def build_messaging_tools() -> list:
     설정(env)이 없는 커넥터는 자동으로 빠진다.
     """
     tools: list = []
+    from trace_tools import build_trace_tools
+
+    tools += build_trace_tools()
     for connector_cls in ALL_CONNECTORS:
         tools += connector_cls().tools()
     return tools

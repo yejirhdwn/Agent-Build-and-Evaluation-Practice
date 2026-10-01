@@ -1,0 +1,7 @@
+job_id,name,schedule,predecessor,input_tables,output_tables,main_class
+B01_TARGET,Campaign target extraction,D 17:00,-,CAMPAIGN|CUST_MASTER|CONTACT_HIST,CMP_TARGET,TargetExtractJob
+B02_OFFER,Offer assignment,D 17:30 after B01,B01_TARGET,CMP_TARGET|OFFER_MASTER,CMP_OFFER,OfferAssignJob
+B03_MSG,Message build,D 18:00 after B02,B02_OFFER,CMP_OFFER|MSG_TEMPLATE,CHNL_SEND_REQ,MessageBuildJob
+B04_CHNL_SEND,Channel send,D 19:00 after B03,B03_MSG,CHNL_SEND_REQ,RELAY_OUT|SEND_HIST,ChannelSendJob
+R01_RESULT,Send result and offer response receive,D+1 02:00,B04_CHNL_SEND,RELAY_RESULT_FILE|OFFER_RESPONSE_FILE,SEND_HIST|OFFER_RESULT,ResultReceiveJob
+R02_PERF_SUM,Campaign performance aggregation,D+1 04:00 after R01,R01_RESULT,SEND_HIST|OFFER_RESP_HIST,CMP_PERF_SUM,CampaignPerfSumJob

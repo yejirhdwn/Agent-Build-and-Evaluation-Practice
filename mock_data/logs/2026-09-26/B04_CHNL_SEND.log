@@ -1,0 +1,50 @@
+2026-09-26 19:00:02.114 [INFO ] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Job started. campaigns=2
+2026-09-26 19:00:02.115 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=1 state=RUNNING
+2026-09-26 19:00:02.116 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=2 state=RUNNING
+2026-09-26 19:00:02.117 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=3 state=RUNNING
+2026-09-26 19:00:02.118 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=4 state=RUNNING
+2026-09-26 19:00:02.119 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=5 state=RUNNING
+2026-09-26 19:00:02.120 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=6 state=RUNNING
+2026-09-26 19:00:02.121 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=7 state=RUNNING
+2026-09-26 19:00:02.122 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=8 state=RUNNING
+2026-09-26 19:00:02.123 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=9 state=RUNNING
+2026-09-26 19:00:02.124 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=10 state=RUNNING
+2026-09-26 19:00:02.125 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=11 state=RUNNING
+2026-09-26 19:00:02.126 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=12 state=RUNNING
+2026-09-26 19:00:02.127 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=13 state=RUNNING
+2026-09-26 19:00:02.128 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=14 state=RUNNING
+2026-09-26 19:00:02.129 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=15 state=RUNNING
+2026-09-26 19:00:02.130 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=16 state=RUNNING
+2026-09-26 19:00:02.131 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=17 state=RUNNING
+2026-09-26 19:00:02.132 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=18 state=RUNNING
+2026-09-26 19:00:02.133 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=19 state=RUNNING
+2026-09-26 19:00:02.134 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=20 state=RUNNING
+2026-09-26 19:00:02.135 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=21 state=RUNNING
+2026-09-26 19:00:02.136 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=22 state=RUNNING
+2026-09-26 19:00:02.137 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=23 state=RUNNING
+2026-09-26 19:00:02.138 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=24 state=RUNNING
+2026-09-26 19:00:02.139 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=25 state=RUNNING
+2026-09-26 19:00:02.140 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=26 state=RUNNING
+2026-09-26 19:00:02.141 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=27 state=RUNNING
+2026-09-26 19:00:02.142 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=28 state=RUNNING
+2026-09-26 19:00:02.143 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=29 state=RUNNING
+2026-09-26 19:00:02.144 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=30 state=RUNNING
+2026-09-26 19:00:02.145 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=31 state=RUNNING
+2026-09-26 19:00:02.146 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=32 state=RUNNING
+2026-09-26 19:00:02.147 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=33 state=RUNNING
+2026-09-26 19:00:02.148 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=34 state=RUNNING
+2026-09-26 19:00:02.149 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=35 state=RUNNING
+2026-09-26 19:00:02.150 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=36 state=RUNNING
+2026-09-26 19:00:02.151 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=37 state=RUNNING
+2026-09-26 19:00:02.152 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=38 state=RUNNING
+2026-09-26 19:00:02.153 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=39 state=RUNNING
+2026-09-26 19:00:02.154 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=40 state=RUNNING
+2026-09-26 19:00:02.155 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=41 state=RUNNING
+2026-09-26 19:00:02.156 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=42 state=RUNNING
+2026-09-26 19:00:02.157 [DEBUG] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=43 state=RUNNING
+2026-09-26 19:00:02.200 [WARN ] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Advisory connection wait. wait_ms=18 action=none
+2026-09-26 19:00:02.531 [INFO ] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Campaign start. cmp_id=20260926CMP002 req_count=28000
+2026-09-26 19:10:40.008 [INFO ] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Progress. cmp_id=20260926CMP002 processed=28000/28000 tps=20.0
+2026-09-26 19:28:03.200 [INFO ] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Campaign end. cmp_id=20260926CMP002 processed=28000 sent_count=28000 status=COMPLETED elapsed_sec=1680
+2026-09-26 19:40:02.531 [INFO ] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Campaign start. cmp_id=20260926CMP001 req_count=42000
+2026-09-26 19:42:11.902 [INFO ] [B04_CHNL_SEND] [run=20260926-B04-01] [ChannelSendJob] Progress. cmp_id=20260926CMP001 processed=9000/42000 sent_count=9000 tps=72.0
