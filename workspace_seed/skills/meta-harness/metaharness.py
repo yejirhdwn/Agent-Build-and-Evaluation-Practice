@@ -47,8 +47,10 @@ from pathlib import Path
 HARNESS_ENTRY = "langchain-deepagents.py"
 
 # variant 복사 시 제외할 무겁거나 런타임/스크래치 성격의 경로.
+# eval/(정답·시나리오)과 runs/(평가 보고서)는 복제본 에이전트가 읽으면 정답 유출이므로 복사하지 않는다.
 COPY_IGNORE_DIRS = {
     ".git", ".venv", "venv", "workspace", "__pycache__", ".langgraph_api",
+    "eval", "runs",
     ".meta", ".mypy_cache", ".ruff_cache", ".pytest_cache", "node_modules",
     ".idea", ".vscode",
 }
@@ -638,7 +640,9 @@ def _run_headless_subprocess(repo: Path, variant: Path, ws: Path, out: Path,
         "--deadline-s", str(timeout),
     ]
     # 부모 env 를 물려주되 WORKSPACE_DIR 는 헤드리스가 직접 설정하므로 제거.
+    # 복제본 에이전트의 셸은 date 만 허용한다(meta-harness 재귀 실행·레포 밖 파일 읽기 차단).
     env = {k: v for k, v in os.environ.items() if k != "WORKSPACE_DIR"}
+    env["META_HARNESS_ENABLED"] = "0"
     try:
         # 부모 timeout 은 자식 마감 + 여유. 자식이 정상적으로 부분 캡처를 남기면
         # 여기까지 오지 않고, 자식이 단일 스텝에 멈춰버린 경우에만 SIGKILL 백스톱.

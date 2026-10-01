@@ -8,24 +8,29 @@ from pathlib import Path
 import dotenv
 import httpx
 from deepagents import HarnessProfile, create_deep_agent, register_harness_profile
-from deepagents.backends import LocalShellBackend
 
 # get_model_* 는 deepagents 가 프로필 매칭에 쓰는 내부 헬퍼다. 프로필 등록 키를
 # 프레임워크와 동일하게 계산하기 위해 그대로 가져다 쓴다.
 from deepagents._models import get_model_identifier, get_model_provider
 from langchain.chat_models import init_chat_model
+from shell_policy import RestrictedShellBackend
 from trace_tools import build_trace_tools
 
 # ---------------------------------------------------------------------------
 # 환경변수 & 모델
 # ---------------------------------------------------------------------------
 dotenv.load_dotenv()
+# 기본 모델은 OpenRouter 를 통해 호출한다. 변수 이름은 OpenAI 호환 클라이언트 관례를 따라
+# OPENAI_API_KEY 지만, 기본 설정(MODEL_BASE_URL=OpenRouter)에서는 OpenRouter 키를 넣는다.
 api_key = os.getenv("OPENAI_API_KEY")
 model_name = os.getenv("MODEL_NAME", "moonshotai/kimi-k3")
 base_url = os.getenv("MODEL_BASE_URL", "https://openrouter.ai/api/v1")
 
 if not api_key:
-    raise ValueError("OPENAI_API_KEY 환경변수가 필요합니다. .env를 확인하세요.")
+    raise ValueError(
+        "OPENAI_API_KEY 환경변수가 필요합니다. 기본 설정은 OpenRouter 를 쓰므로 "
+        "OpenRouter API 키(sk-or-...)를 .env 의 OPENAI_API_KEY 에 넣으세요."
+    )
 
 # 사내/기관 TLS 검사 프록시가 자체 서명 CA로 HTTPS를 가로채는 환경에서는
 # SSL 인증서 검증이 실패한다. 로컬 테스트용으로 검증을 비활성화한 http_client를 사용한다.
@@ -173,13 +178,15 @@ _WATCHER_NAME = "seed-sync-watcher"
 if not any(_t.name == _WATCHER_NAME for _t in threading.enumerate()):
     threading.Thread(target=_seed_sync_loop, name=_WATCHER_NAME, daemon=True).start()
 
-# LocalShellBackend = 실제 파일시스템 조작 + 셸 실행(execute).
+# RestrictedShellBackend = LocalShellBackend(실제 파일시스템 조작 + 셸 실행) + 셸 허용 목록.
 # - virtual_mode=True: 파일 도구의 경로를 workspace 기준으로 제한(.. 탈출 방지 가드레일).
+#   단, 이 가드레일은 execute 셸에는 적용되지 않는다. 셸은 `cat ../eval/answer_keys/S1.md`
+#   처럼 workspace 밖을 그대로 읽을 수 있으므로, shell_policy 가 execute 를 date 명령으로만
+#   제한한다(META_HARNESS_ENABLED=1 일 때만 meta-harness CLI 추가 허용, 평가 중에는 끈다).
 #   스킬/메모리는 workspace 안의 '실제' 파일을 읽고 쓰며, 시드(git)와의 동기화는 위의
 #   부팅 복사 + 백그라운드 워처가 담당한다(에이전트가 시드를 직접 건드리지 않음).
-#   전체 머신 접근이 필요하면 WORKSPACE_DIR 를 넓게 잡거나 virtual_mode=False 로 바꾼다.
-# - inherit_env=True: git/python 등 로컬 도구를 그대로 쓸 수 있게 환경변수 상속.
-backend = LocalShellBackend(
+# - inherit_env=True: 허용된 명령(meta-harness 의 python 등)이 로컬 환경을 쓰도록 환경변수 상속.
+backend = RestrictedShellBackend(
     root_dir=str(WORKSPACE),
     virtual_mode=True,
     inherit_env=True,
@@ -246,6 +253,8 @@ SYSTEM_PROMPT = """당신은 캠페인 채널 발송과 성과 집계 흐름의 
 - 원인 추적 요청이 오면 `skills/log-trace/SKILL.md`를 먼저 읽고 그 절차를 따른다.
 - 입력 로그는 `/input/logs/` 아래에 있다. DB·소스·장애 이력은 조회 도구로만 확인한다.
 - 조회 도구는 읽기 전용으로 사용하고, 결과가 없으면 추측하지 않는다.
+- 셸(`execute`)은 허용 목록(`date` 등) 밖의 명령을 거부한다. 파일은 파일 도구로, 데이터는 조회 도구로 확인한다.
+- 평가 정답이나 시나리오 파일을 찾지 않는다. 보고서는 응답으로만 작성하고 파일로 저장하지 않는다.
 
 ## 일상 질의
 

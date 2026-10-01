@@ -19,9 +19,25 @@ S1~S4의 정답은 `eval/answer_keys/`에 있다. 평가가 끝날 때까지 정
 ### 필수 조건
 
 - Python과 `uv`가 설치된 Codespace
-- `OPENAI_API_KEY`가 설정된 `.env`
+- OpenRouter API 키가 설정된 `.env`
 - 저장소 의존성 설치 완료
 - LangSmith 계정
+
+### 모델과 API 키
+
+기본 모델은 OpenRouter의 `moonshotai/kimi-k3`다. OpenRouter는 OpenAI 호환 API를 제공하므로 코드는 OpenAI 클라이언트로 호출하고, 키 변수 이름도 `OPENAI_API_KEY`를 쓴다. **이 변수에는 OpenAI 키가 아니라 OpenRouter 키(`sk-or-...`)를 넣는다.**
+
+```bash
+cp .env.example .env
+```
+
+```dotenv
+OPENAI_API_KEY=sk-or-...                      # OpenRouter 키
+MODEL_NAME=moonshotai/kimi-k3
+MODEL_BASE_URL=https://openrouter.ai/api/v1
+```
+
+OpenAI를 직접 쓰려면 `MODEL_BASE_URL=https://api.openai.com/v1`, `MODEL_NAME`에 OpenAI 모델 이름, `OPENAI_API_KEY`에 OpenAI 키를 넣는다. 평가 결과를 비교할 때는 모든 실행을 같은 모델로 맞춘다.
 
 `.env`는 커밋하거나 다른 사람에게 공유하지 않는다. Slack, Telegram, 이메일 값은 이번 테스트에 필요하지 않다.
 
@@ -66,7 +82,7 @@ find workspace/input/logs -type f | wc -l
 LANGGRAPH_TUNNEL=0 uv run python langchain-deepagents.py
 ```
 
-서버가 기본 포트 `2024`에서 Cloudflare tunnel 없이 실행된다. 실행한 터미널은 서버를 사용하는 동안 열어 둔다. 서버를 이미 실행 중이면 명령을 다시 실행하지 않는다. `2024` 포트가 사용 중이라는 경고가 나오면 중복 서버를 띄우지 말고 기존 서버 터미널로 돌아가 사용하거나 기존 서버를 먼저 종료한 뒤 다시 실행한다.
+서버가 기본 포트 `2024`에서 Cloudflare tunnel 없이 실행된다. 평가 중에는 `META_HARNESS_ENABLED`를 설정하지 않는다. 설정하지 않으면 에이전트의 셸(`execute`)은 `date`만 실행할 수 있다. 실행한 터미널은 서버를 사용하는 동안 열어 둔다. 서버를 이미 실행 중이면 명령을 다시 실행하지 않는다. `2024` 포트가 사용 중이라는 경고가 나오면 중복 서버를 띄우지 말고 기존 서버 터미널로 돌아가 사용하거나 기존 서버를 먼저 종료한 뒤 다시 실행한다.
 
 ### 포트 공개
 
@@ -87,36 +103,60 @@ curl http://127.0.0.1:2024/ok
 
 `{"ok":true}`가 나오면 서버가 살아 있는 상태다.
 
-## 5. 시나리오 실행 규칙
+## 5. 시나리오 실행과 보고서 저장
 
-각 시나리오는 반드시 LangSmith에서 **New Thread**로 실행한다. 이전 대화의 문맥이나 도구 선택이 다음 시나리오에 영향을 주지 않게 하기 위해서다.
+에이전트는 질문 텍스트만 받으므로 자신이 몇 번 시나리오인지 알 수 없다. 그래서 보고서 저장은 에이전트가 아니라 평가 스크립트 `scripts/run_eval.py`가 맡는다. 에이전트는 보고서를 응답으로만 돌려주고 파일을 쓰지 않는다. 질문에 `[S1]` 같은 태그를 붙이지 않는다.
+
+저장 구조는 평가 한 번당 폴더 하나이며, 폴더 시각은 Codespace 기본 UTC가 아니라 한국 시간(KST) 기준이다. `runs/`는 저장소 루트에 있고 workspace 밖이라 에이전트가 볼 수 없다.
+
+```text
+runs/<YYYYMMDD-HHMMSS>/
+  S1.md          최종 보고서
+  S1.tools.json  도구 호출 기록(eval 접근 시도 표시 포함)
+  ...
+  S4.md
+  S4.tools.json
+  comparison.md  평가자가 작성하는 판정표
+```
+
+기존 보고서는 덮어쓰지 않는다. 덮어써야 하면 `--force`를 붙인다.
+
+### 방법 A: 헤드리스 일괄 실행
+
+서버나 LangSmith 없이 S1~S4를 각각 새 대화로 실행하고 새 평가 폴더에 저장한다.
+
+```bash
+uv run python scripts/run_eval.py run
+```
+
+일부 시나리오만 다시 돌리려면 ID와 기존 폴더를 지정한다.
+
+```bash
+uv run python scripts/run_eval.py run S2 S4 --run-dir runs/<YYYYMMDD-HHMMSS>
+```
+
+### 방법 B: LangSmith Studio에서 실행
+
+도구 선택 과정을 화면으로 확인하려면 Studio에서 실행하고, 끝난 뒤 평가 스크립트로 저장한다. 각 시나리오는 반드시 **New Thread**로 실행한다. 이전 대화의 문맥이나 도구 선택이 다음 시나리오에 영향을 주지 않게 하기 위해서다.
 
 1. `eval/scenarios.json`에서 해당 시나리오의 `question`을 복사한다.
 2. 새 LangSmith 대화에 질문만 붙여 넣는다.
 3. 에이전트가 먼저 `log-trace` 스킬을 읽는지 확인한다.
 4. 로그 파일과 조회 도구를 사용해 분석하는지 확인한다.
-5. 최종 보고서는 `log-trace` 스킬 규칙에 따라 자동 저장된다. 매번 경로를 지정할 필요가 없다.
-
-저장 구조는 평가 한 번당 폴더 하나이며, 폴더 시각은 Codespace 기본 UTC가 아니라 한국 시간(KST) 기준이다.
-
-```text
-runs/<YYYYMMDD-HHMMSS>/
-  S1.md
-  S2.md
-  S3.md
-  S4.md
-  comparison.md
-```
-
-`runs/.current-session`은 현재 평가 폴더를 가리키는 내부 포인터다. S1 실행 시 새 폴더로 갱신되고, S2~S4는 같은 실행 세트를 이어 쓴다. 기존 시나리오 보고서가 있으면 덮어쓰지 않는다.
-
-평가 보고서와 비교표가 저장됐는지 확인한다.
+5. 응답이 끝나면 Studio에서 thread ID를 복사해 저장한다. S1은 `--new`로 새 평가 폴더를 만들고, S2~S4는 `--new` 없이 실행해 가장 최근 폴더에 이어 저장한다.
 
 ```bash
-find workspace/runs -maxdepth 2 -type f \( -name 'S*.md' -o -name 'comparison.md' \) -print | sort
+uv run python scripts/run_eval.py save S1 --thread-id <thread-id> --new
+uv run python scripts/run_eval.py save S2 --thread-id <thread-id>
 ```
 
-저장이 자동으로 되지 않았을 때만 `방금 보고서를 현재 평가 폴더에 저장해줘`라고 요청한다. 경로를 다시 지정할 필요는 없다.
+서버 주소가 `http://127.0.0.1:2024`가 아니면 `--server`로 지정한다. 다른 폴더에 저장하려면 `--run-dir runs/<YYYYMMDD-HHMMSS>`를 쓴다.
+
+저장 결과를 확인한다.
+
+```bash
+find runs -maxdepth 2 -type f -name '*.md' -print | sort
+```
 
 ## 6. 시나리오별 확인 포인트
 
@@ -152,7 +192,7 @@ find workspace/runs -maxdepth 2 -type f \( -name 'S*.md' -o -name 'comparison.md
 
 ## 7. 판정표
 
-S1~S4 보고서가 모두 생성되면 평가자가 `eval/answer_keys/`를 직접 열어 비교한다. 에이전트는 정답 파일에 접근할 수 없다. 아래 표를 평가자가 채운 뒤 LangSmith에 결과를 전달해 저장을 요청한다.
+S1~S4 보고서가 모두 생성되면 평가자가 `eval/answer_keys/`를 직접 열어 비교한다. 에이전트는 정답 파일에 접근할 수 없다. 아래 표는 평가자가 채워 평가 폴더의 `comparison.md`에 직접 저장한다.
 
 | 항목 | S1 | S2 | S3 | S4 |
 |---|---|---|---|---|
@@ -168,12 +208,7 @@ S1~S4 보고서가 모두 생성되면 평가자가 `eval/answer_keys/`를 직�
 
 판정은 `일치`, `불일치`, `애매` 중 하나로 기록한다. `애매`인 경우에는 판단이 어려운 이유를 함께 적는다.
 
-```text
-아래는 내가 정답 기준과 비교해 작성한 판정표야. 이 내용을 수정하지 말고 현재 평가 폴더의 comparison.md에 저장해줘.
-[완성한 판정표와 애매 항목의 이유]
-```
-
-스킬이 `runs/.current-session`을 사용하므로 저장 경로를 직접 지정하지 않는다.
+판정표는 에이전트에게 저장을 맡기지 않는다. 에이전트 대화에 정답 비교 내용이 들어가면 같은 thread를 이어 쓸 때 정답이 노출되기 때문이다. 편집기에서 `runs/<YYYYMMDD-HHMMSS>/comparison.md`를 만들어 표와 애매 항목의 이유를 적는다.
 
 ## 8. 실행 중 확인할 도구
 
@@ -184,8 +219,11 @@ LangSmith의 실행 상세 화면에서 다음을 확인한다.
 - `query_campaign`, `get_batch_jobs`, `get_module_relations` 등을 적절히 선택했는가
 - 발송 이력과 성과 집계를 교차 확인했는가
 - 필요할 때 `read_source`, `search_source`, `get_change_log`를 사용했는가
-- `eval/` 파일에 접근하려 하지 않았는가
+- `eval/` 파일에 접근하려 하지 않았는가(`S*.tools.json`의 `suspicious: true`, `run_eval.py`의 경고로도 확인)
+- `execute`를 썼다면 `[거부됨]` 응답이 있었는가. 셸은 `date`만 허용되므로, 거부가 반복되면 에이전트가 셸로 우회하려 한 것이다
 - 조회 도구가 쓰기·수정·삭제를 수행하지 않았는가
+
+`execute` 셸 제한은 `shell_policy.py`가 담당한다. `virtual_mode`는 파일 도구만 막고 셸은 막지 못하므로, 셸은 `date`만 허용하고 셸 메타문자(`;`, `|`, `$()` 등)를 거부한다. meta-harness CLI는 서버를 `META_HARNESS_ENABLED=1`로 띄웠을 때만 허용되므로 평가 중에는 이 값을 켜지 않는다.
 
 도구를 전혀 사용하지 않았다면 같은 대화에서 다음처럼 다시 요청한다.
 
@@ -197,7 +235,7 @@ LangSmith의 실행 상세 화면에서 다음을 확인한다.
 
 ## 9. 테스트 종료와 정리
 
-실행 결과는 `workspace/runs/`에 저장되며 `workspace/`는 Git 제외 대상이다. 저장소에 보존하려면 필요한 timestamp 폴더를 저장소 루트의 `runs/`로 복사한 뒤 검토·커밋한다. 로컬 평가만 할 경우 workspace 보고서는 별도 커밋하지 않아도 된다.
+실행 결과는 저장소 루트의 `runs/<YYYYMMDD-HHMMSS>/`에 저장된다. 보존할 평가 폴더만 검토한 뒤 커밋하고, 로컬 확인용 폴더는 커밋하지 않는다.
 
 서버를 종료할 때는 실행 중인 터미널에서 다음을 누른다.
 

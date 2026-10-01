@@ -21,7 +21,11 @@ Telegram/Email)가 꺼진 상태로 돌아 실수로 실제 메시지를 보내�
 
 ## 엔진
 
-모든 조작은 이 스킬의 CLI 로 한다. 셸(`execute`)에서 호출한다:
+모든 조작은 이 스킬의 CLI 로 한다. 셸(`execute`)에서 호출한다.
+
+> 셸은 허용 목록으로 제한된다. 서버를 `META_HARNESS_ENABLED=1` 로 띄웠을 때만 아래 CLI 를
+> 실행할 수 있고, 꺼져 있으면 `[거부됨]` 이 돌아온다. 그때는 사용자에게 서버를 그렇게 다시
+> 띄워 달라고 안내한다. 셸 메타문자(`; & | < > $ \`, 백틱)와 리다이렉션·heredoc 은 쓸 수 없다.
 
 ```
 python skills/meta-harness/metaharness.py <subcommand> [옵션]
@@ -55,13 +59,11 @@ python skills/meta-harness/metaharness.py doctor
 
 ### 1) baseline 실행
 
-질의 A 를 파일로 저장한 뒤(멀티라인·특수문자 안전) 실행한다:
+질의 A 를 `write_file` 로 `/meta/queryA.txt` 에 저장한 뒤(멀티라인·특수문자 안전) 실행한다.
+셸의 작업 디렉터리는 workspace 루트이므로 경로는 `meta/queryA.txt` 로 넘긴다:
 
 ```
-cat > /tmp/queryA.txt <<'EOF'
-<질의 A 전문>
-EOF
-python skills/meta-harness/metaharness.py run --variant baseline --query-file /tmp/queryA.txt
+python skills/meta-harness/metaharness.py run --variant baseline --query-file meta/queryA.txt
 ```
 
 - `run` 은 baseline 이 없으면 자동 생성한다.
@@ -140,7 +142,7 @@ python skills/meta-harness/metaharness.py diff --a baseline --b v1
 ### 4) variant 실행
 
 ```
-python skills/meta-harness/metaharness.py run --variant v1 --query-file /tmp/queryA.txt
+python skills/meta-harness/metaharness.py run --variant v1 --query-file meta/queryA.txt
 ```
 
 ### 5) 비교
@@ -205,6 +207,9 @@ promote 는 본체를 바꾸는 되돌리기 비싼 행동이므로, 판정의 �
 - **격리 보장**: variant 는 레포 밖에 복사되고 격리 워크스페이스에서 돈다. 본체 workspace/
   AGENTS.md/이메일 트리거는 건드리지 않는다. 실행 중 에이전트가 메모리·스킬을 고쳐도 variant
   소스는 실행 뒤 원래대로 되돌려진다(그 변경은 `runs/<variant>/artifacts/` 에 남는다).
+- **정답 격리**: variant 복사본에는 `eval/`(정답·시나리오)과 `runs/`(평가 보고서)를 넣지 않는다.
+  복제본 에이전트는 `META_HARNESS_ENABLED=0` 으로 돌아 셸이 `date` 만 허용되므로, 레포 밖 파일을
+  셸로 읽거나 meta-harness 를 재귀 실행할 수 없다. S1~S4 평가 중에는 meta-harness 를 켜지 않는다.
 - **커넥터 off 기본**: 실제 Slack/이메일까지 포함해 재현해야 하면 `init --live` /
   `fork --live` 로 만들되, 실제 메시지가 나갈 수 있음을 사용자에게 먼저 경고하라.
 - **정리**: `python skills/meta-harness/metaharness.py clean --all` 로 임시 홈을 지운다.
