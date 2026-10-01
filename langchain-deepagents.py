@@ -13,6 +13,7 @@ from deepagents import HarnessProfile, create_deep_agent, register_harness_profi
 # 프레임워크와 동일하게 계산하기 위해 그대로 가져다 쓴다.
 from deepagents._models import get_model_identifier, get_model_provider
 from langchain.chat_models import init_chat_model
+from observability import configure_tracing, run_config
 from shell_policy import RestrictedShellBackend
 from trace_tools import build_trace_tools
 
@@ -20,6 +21,9 @@ from trace_tools import build_trace_tools
 # 환경변수 & 모델
 # ---------------------------------------------------------------------------
 dotenv.load_dotenv()
+# LangSmith 트레이싱: 프로젝트(LANGSMITH_PROJECT)·엔드포인트(LANGSMITH_ENDPOINT)는 환경변수로만
+# 정한다. 키가 없으면 경고만 출력하고 트레이싱 없이 계속 실행한다.
+configure_tracing()
 # 기본 모델은 OpenRouter 를 통해 호출한다. 변수 이름은 OpenAI 호환 클라이언트 관례를 따라
 # OPENAI_API_KEY 지만, 기본 설정(MODEL_BASE_URL=OpenRouter)에서는 OpenRouter 키를 넣는다.
 api_key = os.getenv("OPENAI_API_KEY")
@@ -47,6 +51,9 @@ model = init_chat_model(
     api_key=api_key,
     base_url=base_url,
     streaming=True,
+    # OpenAI 이외 base_url 에서는 스트리밍 토큰 사용량이 기본 꺼져 있다. Observation(토큰·비용
+    # 지표)을 위해 켠다. 응답 내용에는 영향이 없다.
+    stream_usage=True,
     # reasoning_effort 는 OpenRouter 가 모델별 추론 설정으로 변환한다(kimi-k3 는
     # reasoning_effort 를 지원). low 는 지연이 짧고, 복잡한 추론·에이전트 지속성이
     # 필요하면 medium/high 로 올린다.
@@ -291,7 +298,11 @@ def build_agent(checkpointer=None):
     )
 
 
-agent = build_agent()
+# Studio·헤드리스 실행 trace 를 role/variant/model 로 구분한다. 시나리오 ID 는 에이전트가 알 수
+# 없으므로 평가 스크립트(eval/run_scenarios.py)가 실행할 때 metadata 로 덧붙인다.
+agent = build_agent().with_config(
+    run_config(role="agent", variant=os.getenv("HARNESS_VARIANT", "baseline"))
+)
 
 
 # ---------------------------------------------------------------------------

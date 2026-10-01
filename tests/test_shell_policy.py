@@ -6,9 +6,10 @@ from pathlib import Path
 from shell_policy import RestrictedShellBackend, check_command
 
 _ROOT = Path(__file__).resolve().parent.parent
-_spec = importlib.util.spec_from_file_location("run_eval", _ROOT / "scripts" / "run_eval.py")
-run_eval = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(run_eval)
+_spec = importlib.util.spec_from_file_location("run_scenarios", _ROOT / "eval" / "run_scenarios.py")
+run_scenarios = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(run_scenarios)
+from trace_metrics import compute_metrics, steps_from_messages  # noqa: E402  (run_scenarios 가 경로 추가)
 
 
 class ShellPolicyTest(unittest.TestCase):
@@ -56,7 +57,7 @@ class ShellPolicyTest(unittest.TestCase):
                     backend.read(path)
 
 
-class RunEvalTest(unittest.TestCase):
+class RunScenariosTest(unittest.TestCase):
     def test_final_answer_and_suspicious_calls(self):
         messages = [
             {"type": "human", "content": "질문"},
@@ -67,9 +68,40 @@ class RunEvalTest(unittest.TestCase):
             {"type": "tool", "content": "..."},
             {"type": "ai", "content": [{"type": "text", "text": "① 요약"}]},
         ]
-        self.assertEqual(run_eval.final_answer(messages), "① 요약")
-        calls = run_eval.tool_calls(messages)
-        self.assertEqual([c["suspicious"] for c in calls], [False, True])
+        self.assertEqual(run_scenarios.final_answer(messages), "① 요약")
+        metrics = compute_metrics(steps_from_messages(messages))
+        self.assertEqual(metrics["eval_access_attempts"], 1)
+        self.assertEqual(metrics["write_attempts"], 1)
+
+    def test_sandbox_excludes_answers(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            harness = run_scenarios.make_sandbox(_ROOT, Path(tmp))
+            self.assertTrue((harness / "langchain-deepagents.py").is_file())
+            self.assertTrue((harness / "mock_data" / "logs").is_dir())
+            for leaked in ("eval", "runs", ".env", ".git"):
+                self.assertFalse((harness / leaked).exists(), leaked)
+
+
+class TraceMetricsTest(unittest.TestCase):
+    def test_work_pattern_metrics(self):
+        skill = {"type": "tool", "name": "read_file", "args": {"file_path": "/skills/log-trace/SKILL.md"}}
+        bad = {"type": "tool", "name": "read_file", "args": {"file_path": "/x"}, "error": "Error: not found"}
+        steps = [
+            {"type": "llm", "input_tokens": 100, "output_tokens": 10, "latency_s": 1.0},
+            {"type": "tool", "name": "write_todos", "args": {"todos": []}},
+            skill, dict(skill), bad, dict(bad),
+            {"type": "tool", "name": "execute", "args": {"command": "date"}},
+            {"type": "tool", "name": "execute", "args": {"command": "rm -rf /"}},
+        ]
+        m = compute_metrics(steps, price=(1e-6, 2e-6))
+        self.assertTrue(m["skill_read_first"])
+        self.assertEqual(m["tool_calls"], 7)
+        self.assertEqual(m["duplicate_calls"], 2)
+        self.assertEqual(m["failed_tool_calls"], 2)
+        self.assertEqual(m["failed_retries"], 1)
+        self.assertEqual(m["write_attempts"], 1)
+        self.assertEqual(m["total_tokens"], 110)
+        self.assertAlmostEqual(m["cost_usd"], 0.00012)
 
 
 if __name__ == "__main__":
