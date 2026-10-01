@@ -1,0 +1,7 @@
+{
+  "description": "baseline-v0 에이전트의 S1~S4 기준 점수. Phase 3·4 비교의 출발점이다.",
+  "git_tag": "baseline-v0",
+  "run_dir": "runs/20261001-152522/baseline",
+  "experiment": "baseline-20261001-152522-fcac742f",
+  "dataset": "log-trace-eval-s1-s4"
+}

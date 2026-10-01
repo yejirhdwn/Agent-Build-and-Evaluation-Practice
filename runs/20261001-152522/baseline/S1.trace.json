@@ -1,0 +1,219 @@
+[
+  {
+    "type": "llm",
+    "name": "moonshotai/kimi-k3",
+    "latency_s": 2.278,
+    "input_tokens": 10616,
+    "output_tokens": 77
+  },
+  {
+    "type": "tool",
+    "name": "read_file",
+    "args": {
+      "file_path": "/skills/log-trace/SKILL.md",
+      "limit": 1000
+    },
+    "latency_s": 0.002,
+    "output": "     1\t---\n     2\tname: log-trace\n     3\tdescription: 기획자가 캠페인 발송 안 됨, 일부 발송, 대상 수 이상, 결과 화면 값 이상을 문의했을 때 로그·조회 도구·소스를 따라 원인 후보를 추적하는 절차\n     4\t---\n     5\t\n     6\t# Log Trace\n     7\t\n     8\t## 적용 범위\n     9\t\n    10\t캠페인 발송 흐름과 결과 집계 흐름의 이상을 분석한다. 운영 데이터 변경, 배치 재실행, 소스 수정은 하지 않는다.\n    11\t\n    12\t## 추적 절차\n    13\t\n    14\t1. 문의에서 캠페인 ID, 날짜, 증상을 정리한다. 증상을 `발송 흐름 문제(발송 안 됨·일부 발송·대상 수)`와 `결과 흐름 문제(결과 화면 값 이상)`로 나눈다.\n    15\t2. 발송 흐름이면 캠페인 정보를 조회한다. 해당 날짜의 B01~B04 로그에서 캠페인의 시작·종료 줄을 찾고 단계별 건수와 처리 시간을 표로 만든다. 건수가 줄거나 종료 줄이 없거나 처리 시간이 비정상적으로 긴 첫 단계를 문제 후보로 둔다.\n    16\t3. 결과 흐름이면 화면에서 출발한다. 화면이 읽는 테이블, 그 테이블을 쓰는 배치, 배치가 읽는 테이블 순으로 관계를 거슬러 올라가고 각 테이블의 적재 상태를 확인한다.\n    17\t4. 후보 지점의 로그에서 `ERROR`, `WARN`, 롤백, `skip`, 건수 0을 검색한다. ERROR가 없어도 건수와 DEBUG 로그를 확인한다.\n    18\t5. 자정을 넘긴 처리, 처리일자와 발송일자의 차이 등 시간 관련 이상을 확인한다.\n    19\t6. 정상 날짜 로그와 처리 시간·건수를 비교해 평소와 다른 점을 수치로 확인한다.\n    20\t7. 발송 이력과 집계 테이블로 로그 건수를 교차 확인한다.\n    21\t8. 관련 소스와 변경 이력을 확인한다.\n    22\t9. 같은 날 다른 캠페인도 영향을 받았는지 확인하고, 근거 없이 범위를 일반화하지 않는다.\n    23\t10. 과거 장애 이력을 검색해 같은 점과 다른 점을 비교한다.\n    24\t11. 원인 후보를 근거 강도 순으로 정리한다. 증상과 시간·대상이 맞지 않는 ERROR는 후순위로 둔다. 결함이 없으면 as-is 동작을 설명하고 확인할 점을 제안한다.\n    25\t12. 자료가 부족하면 멈추고 필요한 자료를 구체적으로 요청한다.\n    26\t13. `templates/report_template.md` 양식으로 보고서를 작성하고 개인정보 마스킹을 확인한다.\n    27\t\n    28\t## 보고서 출력\n    29\t\n    30\t최종 보고서는 응답 본문으로만 출력하고 파일로 저장하지 않는다. 평가용 보고서 저장은 평가 스크립트가 맡는다. 사용자가 저장 경로를 직접 지정해 요청한 경우에만 그 경로에 저장한다.\n    31\t\n    32\t## 도구 선택\n    33\t\n    34\t- 로그는 `/input/logs/`의 파일 도구로 읽는다.\n    35\t- 배치, 캠페인, 발송 이력, 집계, 관계, 소스, 변경 이력, 과거 장애는 조회 도구만 사용한다.\n    36\t- 한 번에 넓게 읽기보다 먼저 검색하고, 근거가 되는 필요한 줄만 읽는다.\n    37\t- 조회 결과가 없으면 다른 값을 추측하거나 평가 파일을 찾지 않는다.\n    38\t- 셸(`execute`)은 `date` 외의 명령이 거부된다. 로그를 셸로 읽으려 하지 않는다.\n    39\t\n    40\t## 근거 표기\n    41\t\n    42\t- 로그: `파일명:줄번호`\n    43\t- 소스: `클래스명:줄번호`\n    44\t- 확인된 사실은 `[확인]`, 추정 또는 후보는 `[추정]`으로 표시한다.\n    45\t- 로그 원본의 시각 형식을 그대로 유지한다."
+  },
+  {
+    "type": "llm",
+    "name": "moonshotai/kimi-k3",
+    "latency_s": 2.152,
+    "input_tokens": 11978,
+    "output_tokens": 84
+  },
+  {
+    "type": "tool",
+    "name": "ls",
+    "args": {
+      "path": "/input/logs"
+    },
+    "latency_s": 0.005,
+    "output": "['/input/logs/2026-09-22/', '/input/logs/2026-09-23/', '/input/logs/2026-09-24/', '/input/logs/2026-09-25/', '/input/logs/2026-09-26/', '/input/logs/2026-09-27/']"
+  },
+  {
+    "type": "tool",
+    "name": "query_campaign",
+    "args": {
+      "campaign_id": "20260923CMP001"
+    },
+    "latency_s": 0.006,
+    "output": "{\"cmp_id\": \"20260923CMP001\", \"send_dt\": \"2026-09-23\", \"planned_target_count\": \"182400\", \"target_count\": \"182400\", \"offer_id\": \"OFR-GAMMA\", \"template_id\": \"TPL-C1\", \"channel\": \"PUSH\"}"
+  },
+  {
+    "type": "llm",
+    "name": "moonshotai/kimi-k3",
+    "latency_s": 1.429,
+    "input_tokens": 12245,
+    "output_tokens": 56
+  },
+  {
+    "type": "tool",
+    "name": "ls",
+    "args": {
+      "path": "/input/logs/2026-09-23"
+    },
+    "latency_s": 0.007,
+    "output": "['/input/logs/2026-09-23/B01_TARGET.log', '/input/logs/2026-09-23/B02_OFFER.log', '/input/logs/2026-09-23/B03_MSG.log', '/input/logs/2026-09-23/B04_CHNL_SEND.log', '/input/logs/2026-09-23/R01_RESULT.log', '/input/logs/2026-09-23/R02_PERF_SUM.log']"
+  },
+  {
+    "type": "llm",
+    "name": "moonshotai/kimi-k3",
+    "latency_s": 2.382,
+    "input_tokens": 12424,
+    "output_tokens": 91
+  },
+  {
+    "type": "tool",
+    "name": "grep",
+    "args": {
+      "pattern": "20260923CMP001",
+      "path": "/input/logs/2026-09-23",
+      "output_mode": "content"
+    },
+    "latency_s": 0.012,
+    "output": "/input/logs/2026-09-23/B01_TARGET.log:\n  50: 2026-09-23 17:00:02.000 [INFO ] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Campaign start. cmp_id=20260923CMP001 planned_count=182400\n  52: 2026-09-23 17:01:02.000 [DEBUG] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Candidate count. cmp_id=20260923CMP001 candidate_count=182400\n  57: 2026-09-23 17:10:02.000 [INFO ] [B01_TARGET] [run=20260923-B01-01] [TargetExtractJob] Campaign end. cmp_id=20260923CMP001 target_count=182400 excluded_count=0 elapsed_sec=540\n/input/logs/2026-09-23/B02_OFFER.log:\n  53: 2026-09-23 17:40:00.000 [INFO ] [B02_OFFER] [run=20260923-B02-01] [OfferAssignJob] Campaign start. cmp_id=20260923CMP001 input_count=182400\n  54: 2026-09-23 17:40:01.000 [DEBUG] [B02_OFFER] [run=20260923-B02-01] [OfferAssignJob] Offer assigned. cmp_id=20260923CMP001 offer_id=OFR-GAMMA assigned_count=182400\n  55: 2026-09-23 17:40:05.000 [INFO ] [B02_OFFER] [run=20260923-B02-01] [OfferAssignJob] Campaign end. cmp_id=20260923CMP001 output_count=182400 failed=0 elapsed_sec=480\n/input/logs/2026-09-23/B03_MSG.log:\n  53: 2026-09-23 18:10:00.000 [INFO ] [B03_MSG] [run=20260923-B03-01] [MessageBuildJob] Campaign start. cmp_id=20260923CMP001 input_count=182400\n  54: 2026-09-23 18:10:01.000 [DEBUG] [B03_MSG] [run=20260923-B03-01] [MessageBuildJob] Template rendered. cmp_id=20260923CMP001 template_id=TPL-C1 rendered_count=182400\n  55: 2026-09-23 18:10:05.000 [INFO ] [B03_MSG] [run=20260923-B03-01] [MessageBuildJob] Campaign end. cmp_id=20260923CMP001 message_count=182400 failed=0 elapsed_sec=480\n/input/logs/2026-09-23/B04_CHNL_SEND.log:\n  52: 2026-09-23 19:40:02.531 [INFO ] [B04_CHNL_SEND] [run=20260923-B04-01] [ChannelSendJob] Campaign start. cmp_id=20260923CMP001 req_count=182400\n  53: 2026-09-23 21:15:40.008 [INFO ] [B04_CHNL_SEND] [run=20260923-B04-01] [ChannelSendJob] Progress. cmp_id=20260923CMP001 processed=61000/182400 tps=7.5\n  54: 2026-09-23 23:59:40.008 [INFO ] [B04_CHNL_SEND] [run=20260923-B04-01] [ChannelSe"
+  },
+  {
+    "type": "llm",
+    "name": "moonshotai/kimi-k3",
+    "latency_s": 5.365,
+    "input_tokens": 13588,
+    "output_tokens": 309
+  },
+  {
+    "type": "tool",
+    "name": "search_source",
+    "args": {
+      "keyword": "SendDateValidator"
+    },
+    "latency_s": 0.02,
+    "output": "[{\"source_file\": \"SendDateValidator.java\", \"line\": 6, \"text\": \"public class SendDateValidator.java {\"}, {\"source_file\": \"SendDateValidator.java\", \"line\": 7, \"text\": \"    private final String component = \\\"SendDateValidator\\\";\"}]"
+  },
+  {
+    "type": "tool",
+    "name": "get_change_log",
+    "args": {
+      "start_date": "2026-09-15",
+      "end_date": "2026-09-24"
+    },
+    "latency_s": 0.006,
+    "output": "[{\"change_id\": \"CHG-260924-0130\", \"changed_at\": \"2026-09-24 01:30:00\", \"kind\": \"DEPLOY\", \"object\": \"offer response storage\", \"before\": \"OFFER_RESP_HIST\", \"after\": \"OFFER_RESULT\", \"note\": \"ResultReceiveJob write target migrated; aggregation source not included\"}]"
+  },
+  {
+    "type": "tool",
+    "name": "read_file",
+    "args": {
+      "file_path": "/input/logs/2026-09-23/B04_CHNL_SEND.log",
+      "offset": 45,
+      "limit": 20
+    },
+    "latency_s": 0.005,
+    "output": "    46\t2026-09-23 19:00:02.159 [DEBUG] [B04_CHNL_SEND] [run=20260923-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=45 state=RUNNING\n    47\t2026-09-23 19:00:02.160 [DEBUG] [B04_CHNL_SEND] [run=20260923-B04-01] [ChannelSendJob] Periodic checkpoint. sequence=46 state=RUNNING\n    48\t2026-09-23 19:00:02.200 [WARN ] [B04_CHNL_SEND] [run=20260923-B04-01] [ChannelSendJob] Advisory connection wait. wait_ms=18 action=none\n    49\t2026-09-23 19:00:02.531 [INFO ] [B04_CHNL_SEND] [run=20260923-B04-01] [ChannelSendJob] Campaign start. cmp_id=20260923CMP002 req_count=24500\n    50\t2026-09-23 19:10:40.008 [INFO ] [B04_CHNL_SEND] [run=20260923-B04-01] [ChannelSendJob] Progress. cmp_id=20260923CMP002 processed=24500/24500 tps=20.0\n    51\t2026-09-23 19:28:03.200 [INFO ] [B04_CHNL_SEND] [run=20260923-B04-01] [ChannelSendJob] Campaign end. cmp_id=20260923CMP002 processed=24500 sent_count=24500 status=COMPLETED elapsed_sec=1680\n    52\t2026-09-23 19:40:02.531 [INFO ] [B04_CHNL_SEND] [run=20260923-B04-01] [ChannelSendJob] Campaign start. cmp_id=20260923CMP001 req_count=182400\n    53\t2026-09-23 21:15:40.008 [INFO ] [B04_CHNL_SEND] [run=20260923-B04-01] [ChannelSendJob] Progress. cmp_id=20260923CMP001 processed=61000/182400 tps=7.5\n    54\t2026-09-23 23:59:40.008 [INFO ] [B04_CHNL_SEND] [run=20260923-B04-01] [ChannelSendJob] Progress. cmp_id=20260923CMP001 processed=182400/182400 tps=7.5\n    55\t2026-09-24 00:00:03.417 [ERROR] [B04_CHNL_SEND] [run=20260923-B04-01] [SendDateValidator] Send date mismatch. cmp_id=20260923CMP001 send_dt=20260923 proc_dt=20260924\n    56\t2026-09-24 00:00:03.418 [ERROR] [B04_CHNL_SEND] [run=20260923-B04-01] [ChannelSendJob] at mock.channel.ChannelSendJob.commitCampaign(ChannelSendJob.java:74)\n    57\t2026-09-24 00:00:03.419 [ERROR] [B04_CHNL_SEND] [run=20260923-B04-01] [ChannelSendJob] at mock.batch.JobRunner.run(JobRunner.java:31)\n    58\t2026-09-24 00:00:03.902 [WARN ] [B04_CHNL_SEND] [run=20260923-B04-01] [ChannelSendJob] Transaction rolled back. cmp_id=20260"
+  },
+  {
+    "type": "tool",
+    "name": "query_send_history",
+    "args": {
+      "campaign_id": "20260923CMP001"
+    },
+    "latency_s": 0.009,
+    "output": "{\"message\": \"조건에 맞는 발송 이력이 없습니다.\"}"
+  },
+  {
+    "type": "tool",
+    "name": "search_incident_history",
+    "args": {
+      "keyword": "Send date mismatch"
+    },
+    "latency_s": 0.006,
+    "output": "{\"message\": \"조건에 맞는 과거 장애 이력이 없습니다.\"}"
+  },
+  {
+    "type": "llm",
+    "name": "moonshotai/kimi-k3",
+    "latency_s": 2.99,
+    "input_tokens": 15093,
+    "output_tokens": 152
+  },
+  {
+    "type": "tool",
+    "name": "read_source",
+    "args": {
+      "class_name": "SendDateValidator.java",
+      "start_line": 1,
+      "end_line": 60
+    },
+    "latency_s": 0.005,
+    "output": "{\"source_file\": \"SendDateValidator.java\", \"numbered_source\": [\"1: package mock.campaign;\", \"2: \", \"3: import java.time.LocalDate;\", \"4: \", \"5: /** 발송일과 처리일이 다르면 커밋을 거부한다. */\", \"6: public class SendDateValidator.java {\", \"7:     private final String component = \\\"SendDateValidator\\\";\", \"8: \", \"9:     public void validate(LocalDate sendDate, LocalDate processDate) {\", \"10:         if (!sendDate.equals(processDate)) {\", \"11:             throw new IllegalStateException(\\\"SEND_DATE_MISMATCH\\\");\", \"12:         }\", \"13:     }\", \"14:     private boolean traceCheckpoint01(String value) {\", \"15:         return value != null && !value.isBlank();\", \"16:     }\", \"17: \", \"18:     private boolean traceCheckpoint02(String value) {\", \"19:         return value != null && !value.isBlank();\", \"20:     }\", \"21: \", \"22:     private boolean traceCheckpoint03(String value) {\", \"23:         return value != null && !value.isBlank();\", \"24:     }\", \"25: \", \"26:     private boolean traceCheckpoint04(String value) {\", \"27:         return value != null && !value.isBlank();\", \"28:     }\", \"29: \", \"30:     private boolean traceCheckpoint05(String value) {\", \"31:         return value != null && !value.isBlank();\", \"32:     }\", \"33: \", \"34:     private boolean traceCheckpoint06(String value) {\", \"35:         return value != null && !value.isBlank();\", \"36:     }\", \"37: \", \"38:     private boolean traceCheckpoint07(String value) {\", \"39:         return value != null && !value.isBlank();\", \"40:     }\", \"41: \", \"42:     private boolean traceCheckpoint08(String value) {\", \"43:         return value != null && !value.isBlank();\", \"44:     }\", \"45: \", \"46:     private boolean traceCheckpoint09(String value) {\", \"47:         return value != null && !value.isBlank();\", \"48:     }\", \"49: \", \"50:     private boolean traceCheckpoint10(String value) {\", \"51:         return value != null && !value.isBlank();\", \"52:     }\", \"53: \", \"54:     private boolean traceCheckpoint11(String value) {\", \"55:         return va"
+  },
+  {
+    "type": "tool",
+    "name": "query_perf_summary",
+    "args": {
+      "campaign_id": "20260923CMP001"
+    },
+    "latency_s": 0.005,
+    "output": "{\"cmp_id\": \"20260923CMP001\", \"target_count\": \"182400\", \"send_success_count\": \"0\", \"offer_success_count\": \"0\", \"aggregated_at\": \"2026-09-24 04:40:00\"}"
+  },
+  {
+    "type": "tool",
+    "name": "search_source",
+    "args": {
+      "keyword": "commitCampaign"
+    },
+    "latency_s": 0.009,
+    "output": "{\"message\": \"소스에서 검색어를 찾지 못했습니다.\"}"
+  },
+  {
+    "type": "llm",
+    "name": "moonshotai/kimi-k3",
+    "latency_s": 5.734,
+    "input_tokens": 16013,
+    "output_tokens": 156
+  },
+  {
+    "type": "tool",
+    "name": "search_incident_history",
+    "args": {
+      "keyword": "ROLLED_BACK"
+    },
+    "latency_s": 0.002,
+    "output": "{\"message\": \"조건에 맞는 과거 장애 이력이 없습니다.\"}"
+  },
+  {
+    "type": "tool",
+    "name": "search_incident_history",
+    "args": {
+      "batch_id": "B04_CHNL_SEND"
+    },
+    "latency_s": 0.001,
+    "output": "[{\"incident_id\": \"INC-2025-014\", \"batch_id\": \"B04_CHNL_SEND\", \"result_code\": \"RLY-3001\", \"summary\": \"Relay response timed out after records were committed to the relay queue.\", \"resolution\": \"Compared relay acknowledgements and retried the affected result file.\", \"date\": \"2025-06-18\"}, {\"incident_id\": \"INC-2025-033\", \"batch_id\": \"B04_CHNL_SEND\", \"result_code\": \"RLY-2001\", \"summary\": \"A subset of recipients was rejected by the relay.\", \"resolution\": \"Separated recipient-level failures from campaigns with no relay handoff.\", \"date\": \"2025-09-10\"}]"
+  },
+  {
+    "type": "llm",
+    "name": "moonshotai/kimi-k3",
+    "latency_s": 3.948,
+    "input_tokens": 16336,
+    "output_tokens": 116
+  },
+  {
+    "type": "tool",
+    "name": "grep",
+    "args": {
+      "pattern": "Campaign end",
+      "path": "/input/logs/2026-09-22",
+      "output_mode": "content"
+    },
+    "latency_s": 0.003,
+    "output": "/input/logs/2026-09-22/B01_TARGET.log:\n  57: 2026-09-22 17:10:02.000 [INFO ] [B01_TARGET] [run=20260922-B01-01] [TargetExtractJob] Campaign end. cmp_id=20260922CMP001 target_count=76000 excluded_count=4000 elapsed_sec=540\n  58: 2026-09-22 17:10:05.000 [INFO ] [B01_TARGET] [run=20260922-B01-01] [TargetExtractJob] Campaign end. cmp_id=20260922CMP002 target_count=52000 excluded_count=3000 elapsed_sec=540\n/input/logs/2026-09-22/B02_OFFER.log:\n  55: 2026-09-22 17:40:05.000 [INFO ] [B02_OFFER] [run=20260922-B02-01] [OfferAssignJob] Campaign end. cmp_id=20260922CMP001 output_count=76000 failed=0 elapsed_sec=480\n  58: 2026-09-22 17:40:12.000 [INFO ] [B02_OFFER] [run=20260922-B02-01] [OfferAssignJob] Campaign end. cmp_id=20260922CMP002 output_count=52000 failed=0 elapsed_sec=480\n/input/logs/2026-09-22/B03_MSG.log:\n  55: 2026-09-22 18:10:05.000 [INFO ] [B03_MSG] [run=20260922-B03-01] [MessageBuildJob] Campaign end. cmp_id=20260922CMP001 message_count=76000 failed=0 elapsed_sec=480\n  58: 2026-09-22 18:10:12.000 [INFO ] [B03_MSG] [run=20260922-B03-01] [MessageBuildJob] Campaign end. cmp_id=20260922CMP002 message_count=52000 failed=0 elapsed_sec=480\n/input/logs/2026-09-22/B04_CHNL_SEND.log:\n  56: 2026-09-22 19:28:03.200 [INFO ] [B04_CHNL_SEND] [run=20260922-B04-01] [ChannelSendJob] Campaign end. cmp_id=20260922CMP001 processed=76000 sent_count=76000 status=COMPLETED elapsed_sec=1680\n  59: 2026-09-22 19:63:03.200 [INFO ] [B04_CHNL_SEND] [run=20260922-B04-01] [ChannelSendJob] Campaign end. cmp_id=20260922CMP002 processed=52000 sent_count=52000 status=COMPLETED elapsed_sec=1680"
+  },
+  {
+    "type": "llm",
+    "name": "moonshotai/kimi-k3",
+    "latency_s": 31.722,
+    "input_tokens": 17069,
+    "output_tokens": 1862
+  }
+]

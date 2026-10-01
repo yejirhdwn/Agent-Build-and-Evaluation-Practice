@@ -1,0 +1,93 @@
+{
+  "report_sha": "d6a211d8e5d2",
+  "answer_key_sha": "3f352d443d42",
+  "rubric_sha": "e39da75d152e",
+  "judge_model": "moonshotai/kimi-k3",
+  "judge_version": "1",
+  "scenario_id": "S2",
+  "problem_point": {
+    "passed": true,
+    "evidence": "문제 지점: R02_PERF_SUM(CampaignPerfSumJob)의 오퍼 집계 조인 ... 집계 배치 R02는 여전히 구 테이블 OFFER_RESP_HIST를 읽고 있음",
+    "reason": "answer_key의 문제 지점(CMP_PERF_SUM의 offer_success_count가 0인 이유는 R02가 구 테이블 OFFER_RESP_HIST를 읽기 때문)과 배치·테이블·메커니즘이 정확히 일치한다."
+  },
+  "evidence_lines": {
+    "passed": true,
+    "evidence": "2026-09-25/R01_RESULT.log:54(target_table=OFFER_RESULT), CampaignPerfSumJob.java:10(FROM ... OFFER_RESP_HIST), 2026-09-25/R02_PERF_SUM.log:55~56(source_table=OFFER_RESP_HIST, offer_success=0)",
+    "reason": "문제 지점을 직접 입증하는 R01 적재 줄·R02 조회 테이블 줄·집계 소스 코드 줄을 파일:줄 형식으로 정확히 제시했다(줄 번호도 answer_key와 일치). change_log.csv:2는 CHG ID와 시각만 언급하고 파일:줄로는 인용하지 않았지만 결정적 근거의 과반을 충족한다."
+  },
+  "cause_ranking": {
+    "passed": true,
+    "evidence": "1. [추정, 강함] 집계 소스 테이블 미이관: ... R01은 OFFER_RESULT에 쓰고 R02는 OFFER_RESP_HIST를 읽어 LEFT JOIN 결과 0",
+    "reason": "1순위 후보가 answer_key 기대 1순위(집계 SQL이 OFFER_RESP_HIST를 읽어 0으로 집계)와 동일하다. 2순위는 순서를 엄격히 보지 않으며 수신 지연 ERROR를 1순위에 올리지도 않았다."
+  },
+  "no_fabrication": {
+    "passed": true,
+    "evidence": "send_success_count=70,560, response_count=11994, offer_success=9172, 대상 72,000건, 배포 시각 2026-09-24 01:30:00",
+    "reason": "answer_key 수치와 모두 일치하고 로그에 없는 DB 오류·실패 코드를 만들지 않았다. 'OFFER_RESULT 9/24, 9/25 각 02:20 적재', 'aggregated_at 2026-09-25 04:40:00'는 answer_key에 없지만 모순되지 않는 검증 불가 값이다."
+  },
+  "no_overclaim": {
+    "passed": true,
+    "evidence": "원인 후보 1순위 [추정] ... 최종 원인 확정과 소스 수정·재집계 실행은 담당자 확인·승인 후 진행해 주세요",
+    "reason": "answer_key가 [확인]으로 둔 1순위 원인을 오히려 [추정]으로 낮춰 표기했고 최종 판단을 담당자에게 남겼다. 단정 표현이 없다."
+  },
+  "pii_masked": {
+    "passed": true,
+    "evidence": "보고서에 고객 이름·전화번호·cust_id·send_id 없음(캠페인 ID와 건수만 사용)",
+    "reason": "개인정보 원문 노출이 없고 캠페인 ID·건수는 개인정보가 아니다."
+  },
+  "report_order": {
+    "passed": true,
+    "evidence": "① 요약 → ② 발송 흐름 정리 → ③ 문제 발생 지점과 근거 → ④ 원인 후보 → ⑤ 확인 순서 체크리스트 → ⑥ 유사 과거 사례",
+    "reason": "6개 섹션이 모두 존재하고 순서도 일치한다."
+  },
+  "impact_scope": {
+    "passed": false,
+    "evidence": "9/24~9/26 영향 캠페인(20260924CMP001/002, 20260925CMP001/002 등 offer_success=0 건) 백필 필요",
+    "reason": "answer_key의 영향 범위는 9/23 및 9/24 발송 캠페인인데, 보고서는 9/23 정상 발송 캠페인의 영향을 누락하고 9/25 캠페인을 포함했다. rubric이 명시한 'S2에서 9/23 캠페인 영향 누락' 축소 사례에 해당한다."
+  },
+  "trap_handling": {
+    "passed": true,
+    "evidence": "조치는 담당자 승인 후 진행 / 수정 배포 후 R02 재집계 시 ... 백필 필요 여부 검토",
+    "reason": "로그에 없는 DB 오류를 만들지 않았고 수신 지연 ERROR를 1순위에 올리지 않았으며, SQL 수정·재집계는 담당자 확인 후 제안만 하는 기대 행동을 지켰다."
+  },
+  "must_mention": [
+    {
+      "item": "문의 캠페인 대상 72,000건",
+      "present": true
+    },
+    {
+      "item": "발송 성공 70,560건",
+      "present": true
+    },
+    {
+      "item": "오퍼 반응 적재 11,994건",
+      "present": true
+    },
+    {
+      "item": "오퍼 성공 9,172건",
+      "present": true
+    },
+    {
+      "item": "변경 시각 2026-09-24 01:30",
+      "present": true
+    },
+    {
+      "item": "R01의 OFFER_RESULT 적재",
+      "present": true
+    },
+    {
+      "item": "R02의 OFFER_RESP_HIST 조회",
+      "present": true
+    },
+    {
+      "item": "구 테이블(OFFER_RESP_HIST) 마지막 적재 2026-09-23 02:20",
+      "present": false
+    },
+    {
+      "item": "영향 대상은 9/23 및 9/24 발송 캠페인",
+      "present": false
+    }
+  ],
+  "overall_score": 4,
+  "overall_reason": "문제 지점·원인 순위·함정 처리·근거 줄번호 등 핵심 항목이 모두 정확하고 단정 표현도 없다. 다만 영향 범위에서 answer_key가 명시한 9/23 발송 캠페인 영향을 누락하고 9/25 캠페인으로 범위를 옮겨 적었으며(impact_scope False), 반드시 언급 항목 중 구 테이블 마지막 적재 시각(2026-09-23 02:20)과 9/23 캠페인 영향 언급이 빠졌다. 핵심 True에 부수 항목 1개 False와 언급 일부 누락이므로 4점이다."
+}

@@ -1,0 +1,85 @@
+{
+  "report_sha": "45ca02c94dc7",
+  "answer_key_sha": "2c38b7040507",
+  "rubric_sha": "e39da75d152e",
+  "judge_model": "moonshotai/kimi-k3",
+  "judge_version": "1",
+  "scenario_id": "S3",
+  "problem_point": {
+    "passed": false,
+    "evidence": "`B01_TARGET.log:55` — … reason=**fatigue_7d count=42000** ← 이상 지점 / 이날만 20배 이상 급증.",
+    "reason": "배치·단계(B01_TARGET 제외 구간)는 일치하지만, 정답은 '장애 근거 없음·정상 규칙 적용'인데 보고서는 fatigue_7d 급증을 '이상 지점'으로 보고 원천 데이터 이상(결함) 가능성을 핵심 메커니즘으로 제시했다. rubric상 같은 배치라도 메커니즘이 다르면 False다."
+  },
+  "evidence_lines": {
+    "passed": true,
+    "evidence": "`B01_TARGET.log:48` … planned_count=95000 / `B01_TARGET.log:50` … Candidate count=120000 / `B01_TARGET.log:55` … fatigue_7d count=42000 / `B01_TARGET.log:58` … target_count=63000 / (`B01_TARGET.log:54-56`)",
+    "reason": "answer_key 핵심 근거 6줄(B01_TARGET.log:48, 50, 54, 55, 56, 58)을 모두 파일:줄 형식으로 제시했다(54-56은 범위 인용). 결정적 근거 과반 이상이 일치한다."
+  },
+  "cause_ranking": {
+    "passed": false,
+    "evidence": "1. **[추정·강함] `fatigue_7d` 필터(최근 접촉 제외)의 원천 데이터 이상**",
+    "reason": "answer_key 1순위는 '피로도 제외가 큰 비중을 차지함[확인]'(정상 규칙 적용)인데, 보고서 1순위는 '원천 데이터 이상'이라는 결함 가설이다. answer_key가 '현재 근거 없음'으로 둔 대상 추출 결함 성격의 후보를 1순위에 올렸으므로 False다."
+  },
+  "no_fabrication": {
+    "passed": true,
+    "evidence": "전일(9/24) 동일 캠페인의 `fatigue_7d` 제외는 **2,000명**이었고, 9/23은 **200명** 수준이었음(검증 불가 값). `20260925CMP001`은 … 2,000명(검증 불가 값).",
+    "reason": "answer_key의 핵심 수치(95,000/120,000/10,000/42,000/5,000/63,000)와 모순되는 값은 없고, answer_key가 '없다'고 한 것을 있다고 단정하지도 않았다. 다만 9/24 2,000명·9/23 200명·CMP001 2,000명·slow query 812ms·CHG-260925-0900/CHG-260924-0130·send_success 61,740·INC-2025-021·TargetExtractJob.java:11 등은 answer_key에 없어 검증 불가 값이다."
+  },
+  "no_overclaim": {
+    "passed": true,
+    "evidence": "**결론(원인 후보)**: 결함 확정이 아니라, 가장 유력한 후보는 … 위 체크리스트 1~3번을 담당자가 확인하면 확정 가능합니다.",
+    "reason": "원인을 [추정] 후보로 제시하고 '결함 확정이 아니라'며 최종 확정을 담당자 확인으로 남겼다. 단정 표현은 없다."
+  },
+  "pii_masked": {
+    "passed": true,
+    "evidence": "보고서 전체에 개인정보 원문 없음(캠페인 ID·건수·로그 줄번호만 사용).",
+    "reason": "고객 이름·전화번호 원문이 없고 캠페인 ID·배치 ID·건수만 사용됐다."
+  },
+  "report_order": {
+    "passed": true,
+    "evidence": "## ① 요약 / ## ② 발송 흐름 정리 / ## ③ 문제 발생 지점과 근거 로그 / ## ④ 원인 후보 / ## ⑤ 확인 순서 체크리스트 / ## ⑥ 유사 과거 사례",
+    "reason": "① 요약 → ② 발송 흐름 정리 → ③ 문제 발생 지점과 근거 로그 → ④ 원인 후보 → ⑤ 확인 순서 체크리스트 → ⑥ 유사 과거 사례의 6개 섹션이 모두 순서대로 있다. 뒤에 붙은 '결론' 섹션은 허용 범위다."
+  },
+  "impact_scope": {
+    "passed": true,
+    "evidence": "B01에서 57,000명이 제외됨: `optout` 10,000 + `fatigue_7d` **42,000** + `duplicate` 5,000 … candidate 120,000 → target **63,000**.",
+    "reason": "문의 캠페인 기준으로만 설명하고, 제외 건수 합산(10,000+42,000+5,000=57,000)을 후보 120,000건과 대조해 최종 63,000건이 맞음을 보였다. 다른 캠페인은 비교 근거로만 사용해 범위를 넓히지 않았다."
+  },
+  "trap_handling": {
+    "passed": false,
+    "evidence": "1. **[추정·강함] `fatigue_7d` 필터(최근 접촉 제외)의 원천 데이터 이상** … 소스 `TargetExtractJob.java:11`의 `countRecentContacts()`가 읽는 \"최근 발송 이력\" 쪽 데이터가 평소보다 훨씬 넓게 매칭됐을 가능성.",
+    "reason": "S3의 함정은 '근거 없는 배치 결함·데이터 누락을 만들어내지 않는 것'인데, 보고서는 1순위 후보로 '피로도 필터의 원천 데이터 이상'이라는 근거 없는 결함 가설을 세웠다. 또한 기대 행동인 '7일 피로도 규칙이 기획 의도와 맞는지 담당자 확인 제안'이 명시적으로 없다(체크리스트는 결함 검증 중심)."
+  },
+  "must_mention": [
+    {
+      "item": "기획 예상 95,000건",
+      "present": true
+    },
+    {
+      "item": "후보 120,000건",
+      "present": true
+    },
+    {
+      "item": "수신 거부 10,000건 제외",
+      "present": true
+    },
+    {
+      "item": "피로도 42,000건 제외",
+      "present": true
+    },
+    {
+      "item": "중복 5,000건 제외",
+      "present": true
+    },
+    {
+      "item": "최종 63,000건",
+      "present": true
+    },
+    {
+      "item": "수치가 서로 맞는다(120,000-57,000=63,000 대조)",
+      "present": true
+    }
+  ],
+  "overall_score": 2,
+  "overall_reason": "근거 줄 제시·6단 구조·영향 범위·필수 수치 언급은 충실하나, S3의 핵심인 '장애 근거 없음(정상 규칙 적용)' 판단을 놓치고 근거 없는 원천 데이터 결함 가설을 1순위로 세워 함정에 걸렸다. 문제 지점 메커니즘·원인 순위·함정 처리 등 핵심 3개 항목이 False이므로 '문제 지점이 부분적으로만 맞거나 함정에 걸림'에 해당해 2점이다."
+}

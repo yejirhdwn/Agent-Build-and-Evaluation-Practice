@@ -1,0 +1,85 @@
+{
+  "report_sha": "2d0c6efdb651",
+  "answer_key_sha": "d63bb3f9ae2a",
+  "rubric_sha": "e39da75d152e",
+  "judge_model": "moonshotai/kimi-k3",
+  "judge_version": "1",
+  "scenario_id": "S1",
+  "problem_point": {
+    "passed": true,
+    "evidence": "\"채널 발송(B04)에서 전량 롤백되어 실제 발송 0건\", \"SendDateValidator가 발송일(20260923) ≠ 처리일(20260924)로 커밋을 거부해 182,400건 전량 롤백\"",
+    "reason": "answer_key의 문제 지점(B04_CHNL_SEND, 자정 넘김으로 발송일 검증 실패 → 트랜잭션 전체 롤백)과 배치·메커니즘이 정확히 일치한다."
+  },
+  "evidence_lines": {
+    "passed": true,
+    "evidence": "\"B04_CHNL_SEND.log:55 — 2026-09-24 00:00:03.417 [ERROR] SendDateValidator Send date mismatch\", \"B04_CHNL_SEND.log:58 — Transaction rolled back. rolled_back=182400\", \"2026-09-22/B04_CHNL_SEND.log:56,59\"",
+    "reason": "결정적 근거인 발송일 불일치(55)와 롤백(58) 줄을 정확히 제시했고, 시작 줄(51→52), 진행 줄(53→54)은 ±1줄 허용 범위다. 전일 비교 근거(9/22 B04:56)도 일치해 결정적 근거 과반이 맞다. B01_TARGET.log:57과 send_summary.csv:10은 미인용이나 과반 충족으로 True다."
+  },
+  "cause_ranking": {
+    "passed": true,
+    "evidence": "\"1. [추정, 강] 자정 넘김 + SendDateValidator 커밋 거부: 처리 완료(23:59:40) 후 커밋 시점이 00:00:03으로 날짜가 바뀌어 검증 예외 → 전량 롤백\"",
+    "reason": "1순위가 answer_key 기대 1순위(처리 지연→처리일자 변경→검증 실패→롤백)와 같은 메커니즘이다. [확인]이 아닌 [추정, 강]으로 표기했으나 순위 적절성 판정에는 영향이 없고 오히려 보수적 표현이다."
+  },
+  "no_fabrication": {
+    "passed": true,
+    "evidence": "\"SendDateValidator.java:9-13 ... IllegalStateException(\\\"SEND_DATE_MISMATCH\\\")\", \"15,602초 소요\", \"tps=20.0\" (검증 불가 값)",
+    "reason": "answer_key와 모순되는 값은 없다. 다만 SendDateValidator.java:9-13 소스 코드·SEND_DATE_MISMATCH 에러 코드, 15,602초, tps=20.0, B04 로그 49-51번 줄(CMP002) 등은 answer_key에 없어 검증 불가 값이나 모순은 아니므로 감점하지 않는다."
+  },
+  "no_overclaim": {
+    "passed": true,
+    "evidence": "\"[추정] 원인 후보 1순위는...\", \"1. [추정, 강] 자정 넘김 + SendDateValidator 커밋 거부\", \"담당자 승인 후 진행\"",
+    "reason": "원인을 '후보'로 제시하고 [추정] 등급을 달았으며, 재발송·정책 변경은 담당자 승인·확인 사항으로 남겼다. answer_key가 [확인]으로 둔 롤백 발생을 [확인]으로 적은 것은 단정이 아니다."
+  },
+  "pii_masked": {
+    "passed": true,
+    "evidence": "보고서 전체에 개인정보 원문 없음(캠페인 ID·건수·로그 줄번호만 사용)",
+    "reason": "고객 이름·전화번호 원문이 없고 캠페인 ID와 건수만 사용됐다. cust_id·send_id 나열도 없다."
+  },
+  "report_order": {
+    "passed": true,
+    "evidence": "① 요약 → ② 발송 흐름 정리 → ③ 문제 발생 지점과 근거 로그 → ④ 원인 후보 → ⑤ 확인 순서 체크리스트 → ⑥ 유사 과거 사례",
+    "reason": "6개 섹션이 모두 존재하고 순서도 ①~⑥ 규정 순서와 정확히 일치한다."
+  },
+  "impact_scope": {
+    "passed": true,
+    "evidence": "\"같은 날 다른 캠페인 20260923CMP002(24,500건)는 19:28에 COMPLETED로 정상 발송\", \"sent_count=0 status=ROLLED_BACK\"",
+    "reason": "CMP001은 발송 0건, 같은 날 CMP002는 정상 완료임을 명시해 날짜 전체 장애로 일반화하지 않았고 영향 범위가 answer_key와 일치한다."
+  },
+  "trap_handling": {
+    "passed": true,
+    "evidence": "\"CMP001 재발송 여부·방법(재실행 시 send_dt 처리 방식) 담당자 승인 후 진행\", \"저처리량 원인(채널 지연, 큐 대기 등)은 로그에 직접 근거가 없어 추가 확인 필요\"",
+    "reason": "중계사 장애 단정이나 다른 캠페인 실패 일반화가 없고, 오히려 CMP002 정상을 명시했다. 재발송·실행 시간 조정도 담당자 승인 전제의 제안에 그쳐 기대 행동을 지켰다."
+  },
+  "must_mention": [
+    {
+      "item": "대상 182,400건",
+      "present": true
+    },
+    {
+      "item": "21:15 진행 시 61,000건",
+      "present": false
+    },
+    {
+      "item": "TPS 7.5",
+      "present": true
+    },
+    {
+      "item": "00:00:03 발송일 불일치",
+      "present": true
+    },
+    {
+      "item": "182,400건 롤백",
+      "present": true
+    },
+    {
+      "item": "같은 날 CMP002 24,500건 정상 완료",
+      "present": true
+    },
+    {
+      "item": "S0(9/22) CMP001 76,000건 기준 처리시간 1,680초",
+      "present": true
+    }
+  ],
+  "overall_score": 5,
+  "overall_reason": "9개 판정 항목이 모두 True다. 문제 지점(B04 자정 넘김 검증 실패·전량 롤백)과 1순위 원인이 answer_key와 일치하고, 결정적 근거(55·58번 줄 등)를 파일:줄 형식으로 정확히 제시했다. 함정(중계사 장애 단정·일반화)을 피하고 재발송은 제안에 그쳤으며, 원인을 [추정] 후보로 제시하고 최종 판단을 담당자에게 남겼다. 반드시 언급 7개 중 6개를 포함했고 누락된 '21:15 61,000건'은 TPS 7.5로 부분 커버돼 '거의 전부 포함'에 해당하므로 5점을 부여한다."
+}

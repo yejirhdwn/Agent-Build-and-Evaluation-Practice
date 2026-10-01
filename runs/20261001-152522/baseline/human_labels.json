@@ -1,0 +1,26 @@
+{
+  "_설명": "true=일치, false=불일치, null=판정 안 함. 판정할 시나리오만 채운다.",
+  "_판정자": "Claude 수동 판정(answer_key·rubric·원본 로그 대조). Judge 결과 공개 후 검토했으므로 블라인드가 아님 — 사용자 재검토 권장",
+  "S2": {
+    "problem_point": true,
+    "evidence_lines": true,
+    "cause_ranking": true,
+    "no_fabrication": true,
+    "no_overclaim": true,
+    "pii_masked": true,
+    "report_order": true,
+    "impact_scope": false,
+    "trap_handling": true
+  },
+  "S3": {
+    "problem_point": false,
+    "evidence_lines": true,
+    "cause_ranking": false,
+    "no_fabrication": true,
+    "no_overclaim": true,
+    "pii_masked": true,
+    "report_order": true,
+    "impact_scope": true,
+    "trap_handling": false
+  }
+}

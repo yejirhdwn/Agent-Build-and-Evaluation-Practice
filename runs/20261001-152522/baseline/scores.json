@@ -1,0 +1,67 @@
+{
+  "run_dir": "C:\\Users\\SKAX\\Desktop\\yejikwon\\runs\\20261001-152522\\baseline",
+  "experiment": "baseline-20261001-152522-fcac742f",
+  "judge_model": "moonshotai/kimi-k3",
+  "scenarios": {
+    "S1": {
+      "pass_count": 9,
+      "overall_score": 5,
+      "items": {
+        "problem_point": true,
+        "evidence_lines": true,
+        "cause_ranking": true,
+        "no_fabrication": true,
+        "no_overclaim": true,
+        "pii_masked": true,
+        "report_order": true,
+        "impact_scope": true,
+        "trap_handling": true
+      }
+    },
+    "S2": {
+      "pass_count": 8,
+      "overall_score": 4,
+      "items": {
+        "problem_point": true,
+        "evidence_lines": true,
+        "cause_ranking": true,
+        "no_fabrication": true,
+        "no_overclaim": true,
+        "pii_masked": true,
+        "report_order": true,
+        "impact_scope": false,
+        "trap_handling": true
+      }
+    },
+    "S3": {
+      "pass_count": 6,
+      "overall_score": 2,
+      "items": {
+        "problem_point": false,
+        "evidence_lines": true,
+        "cause_ranking": false,
+        "no_fabrication": true,
+        "no_overclaim": true,
+        "pii_masked": true,
+        "report_order": true,
+        "impact_scope": true,
+        "trap_handling": false
+      }
+    },
+    "S4": {
+      "pass_count": 9,
+      "overall_score": 5,
+      "items": {
+        "problem_point": true,
+        "evidence_lines": true,
+        "cause_ranking": true,
+        "no_fabrication": true,
+        "no_overclaim": true,
+        "pii_masked": true,
+        "report_order": true,
+        "impact_scope": true,
+        "trap_handling": true
+      }
+    }
+  }
+}
